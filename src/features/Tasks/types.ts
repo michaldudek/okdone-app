@@ -4,3 +4,5 @@ export type Task = {
   createdAt: Date;
   completedAt?: Date;
 };
+
+export type NewTask = Omit<Task, 'id' | 'completedAt'>;
