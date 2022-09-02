@@ -1,5 +1,5 @@
 function App() {
-  return <h1>ToDo App</h1>;
+  return <h1>OK, Done!</h1>;
 }
 
 export default App;

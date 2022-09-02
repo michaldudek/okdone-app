@@ -1,6 +1,6 @@
 {
-  "short_name": "ToDo App",
-  "name": "ToDo App Kitchen Sink",
+  "short_name": "OK, Done",
+  "name": "OK, Done! - An experimental TODO app",
   "icons": [
     {
       "src": "favicon.ico",

@@ -1,5 +1,10 @@
 {
-  "name": "todoapp",
+  "name": "okdone-app",
+  "description": "An experimental TODO app serving as development kitchen sink and playground for ideas around modern web/app dev.",
+  "author": {
+    "name": "Michal Palys-Dudek",
+    "email": "michal@pnd.io"
+  },
   "version": "0.0.0",
   "private": true,
   "scripts": {

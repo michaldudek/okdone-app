@@ -1,6 +1,6 @@
-# ToDo App
+# OK, Done!
 
-A kitchen sink where I implement a robust ToDo App from scratch to experiment with different things and newest technologies in web dev.
+An experimental TODO app serving as development kitchen sink and playground for ideas around modern web/app dev.
 
 Some future technical ideas include:
 
