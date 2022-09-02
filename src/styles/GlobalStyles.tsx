@@ -1,7 +1,6 @@
 import { css, Global } from '@emotion/react';
 import reset from 'emotion-reset';
 import { FunctionComponent } from 'react';
-import { bgImage } from './bgImage';
 import { MediaQuery } from './breakpoints';
 import { pxToRem } from './pxToRem';
 
@@ -32,7 +31,13 @@ export const GlobalStyles: FunctionComponent = () => (
         width: 100vw;
         height: 100vh;
 
-        ${bgImage}
+        background-color: #4158d0;
+        background-image: linear-gradient(
+          43deg,
+          #4158d0 0%,
+          #c850c0 46%,
+          #ffcc70 100%
+        );
 
         ${MediaQuery.Tablet} {
           display: flex;
