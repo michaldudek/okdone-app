@@ -9,7 +9,7 @@ export const AppContainer = styled.main`
   ${MediaQuery.Tablet} {
     width: 700px;
     height: 90vh;
-    border-radius: ${pxToRem(8)};
+    /* border-radius: ${pxToRem(8)}; */
     box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
   }
 `;

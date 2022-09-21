@@ -31,13 +31,9 @@ export const GlobalStyles: FunctionComponent = () => (
         width: 100vw;
         height: 100vh;
 
-        background-color: #4158d0;
-        background-image: linear-gradient(
-          43deg,
-          #4158d0 0%,
-          #c850c0 46%,
-          #ffcc70 100%
-        );
+        /* gradient copied from grabient.com */
+        background-color: #8bc6ec;
+        background-image: linear-gradient(135deg, #8bc6ec 0%, #9599e2 100%);
 
         ${MediaQuery.Tablet} {
           display: flex;
