@@ -1,7 +1,7 @@
-import { ResourceKey } from 'services/Storage';
+import { ResourceId } from 'services/Storage';
 
 export type Task = {
-  id: ResourceKey;
+  id: ResourceId;
   name: string;
   createdAt: Date;
   completedAt?: Date;

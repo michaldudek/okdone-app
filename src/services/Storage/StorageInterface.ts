@@ -1,8 +1,4 @@
-export type ResourceName = string;
-export type ResourceKey = string;
-
-export type WithId<T> = T & { id: ResourceKey };
-export type ResourceWithId = { id?: ResourceKey };
+import { Resource, ResourceId, ResourceName } from './Resource';
 
 export interface StorageInterface {
   /**
@@ -10,7 +6,7 @@ export interface StorageInterface {
    *
    * @param resource Resource name.
    */
-  list<T extends ResourceWithId>(resource: ResourceName): Promise<T[]>;
+  list<T extends Resource>(resource: ResourceName): Promise<T[]>;
 
   /**
    * Create a new resource.
@@ -18,29 +14,29 @@ export interface StorageInterface {
    * @param resource Resource name.
    * @param data Resource data.
    */
-  create<T = unknown>(resource: ResourceName, data: T): Promise<WithId<T>>;
+  create<T extends Resource>(
+    resource: ResourceName,
+    data: Partial<T>,
+  ): Promise<T>;
 
   /**
    * Read a resource with the given key or id.
    *
    * @param resource Resource name.
-   * @param key Key or ID.
+   * @param id ID.
    */
-  read<T extends ResourceWithId>(
-    resource: ResourceName,
-    key: ResourceKey,
-  ): Promise<T>;
+  read<T extends Resource>(resource: ResourceName, id: ResourceId): Promise<T>;
 
   /**
    * Update a resource.
    *
    * @param resource Resource name.
-   * @param key Key or ID.
+   * @param id ID.
    * @param data Data to update with.
    */
-  update<T extends ResourceWithId>(
+  update<T extends Resource>(
     resource: ResourceName,
-    key: ResourceKey,
+    id: ResourceId,
     data: Partial<T>,
   ): Promise<T>;
 
@@ -48,7 +44,7 @@ export interface StorageInterface {
    * Delete a resource with the given key or id.
    *
    * @param resource Resource name.
-   * @param key Key or ID.
+   * @param id ID.
    */
-  delete(resource: ResourceName, key: ResourceKey): Promise<void>;
+  delete(resource: ResourceName, id: ResourceId): Promise<void>;
 }

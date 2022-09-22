@@ -1,30 +1,28 @@
 import { v4 as uuidv4 } from 'uuid';
-import {
-  ResourceKey,
-  ResourceName,
-  ResourceWithId,
-  StorageInterface,
-  WithId,
-} from './StorageInterface';
+import { Resource, ResourceId, ResourceName } from './Resource';
+import { StorageInterface } from './StorageInterface';
 
 export class MemoryStorage implements StorageInterface {
-  private readonly data = new Map();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private readonly data: Map<ResourceName, Map<ResourceId, any>>;
 
-  public async list<T extends ResourceWithId>(
-    resource: ResourceName,
-  ): Promise<T[]> {
+  constructor(data = new Map()) {
+    this.data = data;
+  }
+
+  public async list<T extends Resource>(resource: ResourceName): Promise<T[]> {
     const collection = this.getCollection<T>(resource);
     return Array.from(collection.values());
   }
 
-  public async create<T = unknown>(
+  public async create<T extends Resource>(
     resource: ResourceName,
-    data: T,
-  ): Promise<WithId<T>> {
-    const newData: WithId<T> = {
+    data: Partial<T>,
+  ): Promise<T> {
+    const newData = {
       id: uuidv4(),
       ...data,
-    };
+    } as T;
 
     const collection = this.getCollection<T>(resource);
     collection.set(newData.id, newData);
@@ -32,32 +30,35 @@ export class MemoryStorage implements StorageInterface {
     return newData;
   }
 
-  public async read<T extends ResourceWithId>(
+  public async read<T extends Resource>(
     resource: ResourceName,
-    key: ResourceKey,
+    id: ResourceId,
   ): Promise<T> {
     throw new Error('Method not implemented.');
   }
 
-  public async update<T extends ResourceWithId>(
+  public async update<T extends Resource>(
     resource: ResourceName,
-    key: ResourceKey,
+    id: ResourceId,
     data: Partial<T>,
   ): Promise<T> {
     throw new Error('Method not implemented.');
   }
 
-  public async delete(resource: ResourceName, key: ResourceKey): Promise<void> {
+  public async delete(resource: ResourceName, id: ResourceId): Promise<void> {
     throw new Error('Method not implemented.');
   }
 
-  private getCollection<T = unknown>(
+  private getCollection<T extends Resource>(
     resource: ResourceName,
-  ): Map<ResourceKey, T> {
-    if (!this.data.has(resource)) {
-      this.data.set(resource, new Map());
+  ): Map<ResourceId, T> {
+    let collection = this.data.get(resource);
+
+    if (!collection) {
+      collection = new Map<ResourceId, T>();
+      this.data.set(resource, collection);
     }
 
-    return this.data.get(resource);
+    return collection;
   }
 }
