@@ -1,22 +1,27 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Resource, ResourceId, ResourceName } from './Resource';
+import { FindCriteria, Resource, ResourceId } from './Resource';
 import { StorageInterface } from './StorageInterface';
 
 export class MemoryStorage implements StorageInterface {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private readonly data: Map<ResourceName, Map<ResourceId, any>>;
+  private readonly data: Map<string, Map<ResourceId, any>>;
 
   constructor(data = new Map()) {
     this.data = data;
   }
 
-  public async list<T extends Resource>(resource: ResourceName): Promise<T[]> {
+  public async list<T extends Resource>(
+    resource: string,
+    criteria?: FindCriteria<T>,
+  ): Promise<T[]> {
     const collection = this.getCollection<T>(resource);
-    return Array.from(collection.values());
+    const arr = Array.from(collection.values());
+    // TODO implement criteria
+    return arr;
   }
 
   public async create<T extends Resource>(
-    resource: ResourceName,
+    resource: string,
     data: Partial<T>,
   ): Promise<T> {
     const newData = {
@@ -31,26 +36,43 @@ export class MemoryStorage implements StorageInterface {
   }
 
   public async read<T extends Resource>(
-    resource: ResourceName,
+    resource: string,
     id: ResourceId,
-  ): Promise<T> {
-    throw new Error('Method not implemented.');
+  ): Promise<T | undefined> {
+    const collection = this.getCollection<T>(resource);
+    return collection.get(id);
   }
 
   public async update<T extends Resource>(
-    resource: ResourceName,
+    resource: string,
     id: ResourceId,
     data: Partial<T>,
   ): Promise<T> {
-    throw new Error('Method not implemented.');
+    const collection = this.getCollection<T>(resource);
+    const item = collection.get(id);
+    if (!item) {
+      throw new Error(
+        `Could not update ${resource} ${id} because it does not exist`,
+      );
+    }
+
+    const newItem = {
+      ...item,
+      ...data,
+    };
+
+    collection.set(id, newItem);
+
+    return newItem;
   }
 
-  public async delete(resource: ResourceName, id: ResourceId): Promise<void> {
-    throw new Error('Method not implemented.');
+  public async delete(resource: string, id: ResourceId): Promise<void> {
+    const collection = this.getCollection(resource);
+    collection.delete(id);
   }
 
   private getCollection<T extends Resource>(
-    resource: ResourceName,
+    resource: string,
   ): Map<ResourceId, T> {
     let collection = this.data.get(resource);
 

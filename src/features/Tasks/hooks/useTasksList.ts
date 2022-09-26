@@ -1,8 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useStorage } from 'services/Storage';
-import { NewTask, Task } from '../types';
-
-const RESOURCE_NAME = 'tasks';
+import { getRepository } from 'services/Storage';
+import { NewTask, Task, TASK_RESOURCE_NAME } from '../types';
 
 type UseTasksListReturnType = {
   tasks: Task[] | undefined;
@@ -12,7 +10,7 @@ type UseTasksListReturnType = {
 };
 
 export const useTasksList = (): UseTasksListReturnType => {
-  const storage = useStorage();
+  const repository = getRepository<Task>(TASK_RESOURCE_NAME);
 
   const queryClient = useQueryClient();
 
@@ -20,15 +18,13 @@ export const useTasksList = (): UseTasksListReturnType => {
     data: tasks,
     isLoading,
     error,
-  } = useQuery<Task[]>([RESOURCE_NAME], () =>
-    storage.list<Task>(RESOURCE_NAME),
-  );
+  } = useQuery<Task[]>([TASK_RESOURCE_NAME], () => repository.find());
 
   const { mutateAsync: addTask } = useMutation(
-    (newTask: NewTask) => storage.create<Task>(RESOURCE_NAME, newTask),
+    (newTask: NewTask) => repository.create(newTask),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([RESOURCE_NAME]);
+        queryClient.invalidateQueries([TASK_RESOURCE_NAME]);
       },
     },
   );

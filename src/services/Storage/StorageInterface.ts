@@ -1,4 +1,4 @@
-import { Resource, ResourceId, ResourceName } from './Resource';
+import { FindCriteria, Resource, ResourceId } from './Resource';
 
 export interface StorageInterface {
   /**
@@ -6,7 +6,10 @@ export interface StorageInterface {
    *
    * @param resource Resource name.
    */
-  list<T extends Resource>(resource: ResourceName): Promise<T[]>;
+  list<T extends Resource>(
+    resource: string,
+    criteria?: FindCriteria<T>,
+  ): Promise<T[]>;
 
   /**
    * Create a new resource.
@@ -14,10 +17,7 @@ export interface StorageInterface {
    * @param resource Resource name.
    * @param data Resource data.
    */
-  create<T extends Resource>(
-    resource: ResourceName,
-    data: Partial<T>,
-  ): Promise<T>;
+  create<T extends Resource>(resource: string, data: Partial<T>): Promise<T>;
 
   /**
    * Read a resource with the given key or id.
@@ -25,7 +25,10 @@ export interface StorageInterface {
    * @param resource Resource name.
    * @param id ID.
    */
-  read<T extends Resource>(resource: ResourceName, id: ResourceId): Promise<T>;
+  read<T extends Resource>(
+    resource: string,
+    id: ResourceId,
+  ): Promise<T | undefined>;
 
   /**
    * Update a resource.
@@ -35,7 +38,7 @@ export interface StorageInterface {
    * @param data Data to update with.
    */
   update<T extends Resource>(
-    resource: ResourceName,
+    resource: string,
     id: ResourceId,
     data: Partial<T>,
   ): Promise<T>;
@@ -46,5 +49,5 @@ export interface StorageInterface {
    * @param resource Resource name.
    * @param id ID.
    */
-  delete(resource: ResourceName, id: ResourceId): Promise<void>;
+  delete(resource: string, id: ResourceId): Promise<void>;
 }

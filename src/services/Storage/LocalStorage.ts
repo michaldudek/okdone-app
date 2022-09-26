@@ -1,5 +1,5 @@
 import { MemoryStorage } from './MemoryStorage';
-import { Resource, ResourceId, ResourceName } from './Resource';
+import { FindCriteria, Resource, ResourceId } from './Resource';
 import { StorageInterface } from './StorageInterface';
 
 export class LocalStorage implements StorageInterface {
@@ -12,7 +12,7 @@ export class LocalStorage implements StorageInterface {
 
     const knownResources = Object.keys(this.getKnownResources());
     const cache = knownResources.map(
-      (resource): [ResourceName, Map<ResourceId, unknown>] => [
+      (resource): [string, Map<ResourceId, unknown>] => [
         resource,
         this.readResources(resource),
       ],
@@ -21,12 +21,15 @@ export class LocalStorage implements StorageInterface {
     this.memory = new MemoryStorage(new Map(cache));
   }
 
-  public async list<T extends Resource>(resource: ResourceName): Promise<T[]> {
-    return this.memory.list(resource);
+  public async list<T extends Resource>(
+    resource: string,
+    criteria?: FindCriteria<T>,
+  ): Promise<T[]> {
+    return this.memory.list(resource, criteria);
   }
 
   public async create<T extends Resource>(
-    resource: ResourceName,
+    resource: string,
     data: Partial<T>,
   ): Promise<T> {
     const result = this.memory.create(resource, data);
@@ -35,14 +38,14 @@ export class LocalStorage implements StorageInterface {
   }
 
   public async read<T extends Resource>(
-    resource: ResourceName,
+    resource: string,
     id: string,
-  ): Promise<T> {
+  ): Promise<T | undefined> {
     return this.memory.read(resource, id);
   }
 
   public async update<T extends Resource>(
-    resource: ResourceName,
+    resource: string,
     id: string,
     data: Partial<T>,
   ): Promise<T> {
@@ -51,13 +54,13 @@ export class LocalStorage implements StorageInterface {
     return result;
   }
 
-  public async delete(resource: ResourceName, id: string): Promise<void> {
+  public async delete(resource: string, id: string): Promise<void> {
     await this.memory.delete(resource, id);
     await this.storeResources(resource);
   }
 
   private readResources<T extends Resource>(
-    resource: ResourceName,
+    resource: string,
   ): Map<ResourceId, T> {
     const rawData = localStorage.getItem(this.makeKey(resource));
 
@@ -73,7 +76,7 @@ export class LocalStorage implements StorageInterface {
     }
   }
 
-  private async storeResources(resource: ResourceName): Promise<void> {
+  private async storeResources(resource: string): Promise<void> {
     const resources = await this.memory.list(resource);
     localStorage.setItem(this.makeKey(resource), JSON.stringify(resources));
 
@@ -82,11 +85,11 @@ export class LocalStorage implements StorageInterface {
     localStorage.setItem(this.KNOWN_RESOURCES, JSON.stringify(knownResources));
   }
 
-  private getKnownResources(): Record<ResourceName, boolean> {
+  private getKnownResources(): Record<string, boolean> {
     return JSON.parse(localStorage.getItem(this.KNOWN_RESOURCES) || '{}');
   }
 
-  private makeKey(resource: ResourceName): string {
+  private makeKey(resource: string): string {
     return [this.prefix, resource].filter(Boolean).join('_');
   }
 }
