@@ -1,3 +1,4 @@
+import { IndexedDBStorage } from './IndexedDBStorage';
 import { LocalStorage } from './LocalStorage';
 import { MemoryStorage } from './MemoryStorage';
 import { Repository } from './Repository';
@@ -8,10 +9,10 @@ export * from './Resource';
 export * from './StorageInterface';
 
 // TODO be smarter about these exports when multiple storages implemented
-// TODO IndexedDB via jsstore lib ?
 
 export const memory = new MemoryStorage();
 export const local = new LocalStorage('okdone');
+export const indexedDb = new IndexedDBStorage('okdone', 3);
 
 const REPOSITORY_MAP: Record<string, Repository> = {};
 
@@ -32,6 +33,11 @@ export const registerRepository = <T extends Resource>(
   REPOSITORY_MAP[resourceName] = repository;
 };
 
+/**
+ * Get a repository for the given resource.
+ *
+ * @param resourceName Name of the resource.
+ */
 export const getRepository = <T extends Resource>(
   resourceName: string,
 ): Repository<T> => {

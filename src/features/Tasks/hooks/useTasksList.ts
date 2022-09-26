@@ -18,7 +18,12 @@ export const useTasksList = (): UseTasksListReturnType => {
     data: tasks,
     isLoading,
     error,
-  } = useQuery<Task[]>([TASK_RESOURCE_NAME], () => repository.find());
+  } = useQuery<Task[]>([TASK_RESOURCE_NAME], () =>
+    repository.find({
+      orderBy: 'createdAt',
+      orderDir: 'asc',
+    }),
+  );
 
   const { mutateAsync: addTask } = useMutation(
     (newTask: NewTask) => repository.create(newTask),
