@@ -9,4 +9,4 @@ export type Task = {
   completedAt?: Date;
 };
 
-export type NewTask = Omit<Task, 'id' | 'completedAt'>;
+export type NewTask = Pick<Task, 'name'>;

@@ -17,7 +17,7 @@ export interface StorageInterface {
    * @param resource Resource name.
    * @param data Resource data.
    */
-  create<T extends Resource>(resource: string, data: Partial<T>): Promise<T>;
+  create<T extends Resource>(resource: string, data: T): Promise<T>;
 
   /**
    * Read a resource with the given key or id.

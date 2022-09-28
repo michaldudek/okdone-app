@@ -19,7 +19,6 @@ export const TaskInput: FunctionComponent<Props> = ({ onAdd }) => {
     (data: FormData) => {
       onAdd({
         name: data.name,
-        createdAt: new Date(),
       });
       reset();
     },

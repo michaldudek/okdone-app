@@ -1,7 +1,6 @@
 import { IDBPDatabase as IDBPDatabaseInterface, openDB } from 'idb';
 import { FindCriteria, Resource, ResourceId } from 'services/Storage/Resource';
 import { StorageInterface } from 'services/Storage/StorageInterface';
-import { v4 as uuidv4 } from 'uuid';
 
 const DEFAULT_PARAMETERS: IDBObjectStoreParameters = { keyPath: 'id' };
 
@@ -75,17 +74,12 @@ export class IndexedDBStorage implements StorageInterface {
 
   public async create<T extends Resource>(
     resource: string,
-    data: Partial<T>,
+    data: T,
   ): Promise<T> {
-    const newData = {
-      id: uuidv4(),
-      ...data,
-    } as T;
-
     const db = await this.connect();
-    await db.add(resource, newData);
+    await db.add(resource, data);
 
-    return newData;
+    return data;
   }
 
   public async read<T extends Resource>(

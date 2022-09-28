@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { FindCriteria, Resource, ResourceId } from './Resource';
 import { StorageInterface } from './StorageInterface';
 
@@ -54,7 +55,12 @@ export class Repository<T extends Resource = Resource> {
    * @param data
    */
   public async create(data: Partial<T>): Promise<T> {
-    return this.storage.create<T>(this.resourceName, data);
+    const newData = {
+      id: uuidv4(),
+      createdAt: new Date(),
+      ...data,
+    } as T;
+    return this.storage.create<T>(this.resourceName, newData);
   }
 
   /**

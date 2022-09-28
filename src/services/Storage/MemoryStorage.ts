@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
 import { FindCriteria, Resource, ResourceId } from './Resource';
 import { StorageInterface } from './StorageInterface';
 
@@ -22,17 +21,12 @@ export class MemoryStorage implements StorageInterface {
 
   public async create<T extends Resource>(
     resource: string,
-    data: Partial<T>,
+    data: T,
   ): Promise<T> {
-    const newData = {
-      id: uuidv4(),
-      ...data,
-    } as T;
-
     const collection = this.getCollection<T>(resource);
-    collection.set(newData.id, newData);
+    collection.set(data.id, data);
 
-    return newData;
+    return data;
   }
 
   public async read<T extends Resource>(

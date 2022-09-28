@@ -30,7 +30,7 @@ export class LocalStorage implements StorageInterface {
 
   public async create<T extends Resource>(
     resource: string,
-    data: Partial<T>,
+    data: T,
   ): Promise<T> {
     const result = this.memory.create(resource, data);
     await this.storeResources(resource);

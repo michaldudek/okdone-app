@@ -2,6 +2,7 @@ export type ResourceId = string | number;
 
 export type Resource = {
   id: ResourceId;
+  createdAt?: Date;
 };
 
 export type FindCriteria<T extends Resource> = {
