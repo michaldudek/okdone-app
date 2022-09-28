@@ -1,11 +1,9 @@
-import { ResourceId } from 'services/Storage';
+import { Resource } from 'services/Storage';
 
 export const TASK_RESOURCE_NAME = 'tasks';
 
-export type Task = {
-  id: ResourceId;
+export type Task = Resource & {
   name: string;
-  createdAt: Date;
   completedAt?: Date;
 };
 

@@ -70,7 +70,10 @@ export class Repository<T extends Resource = Resource> {
    * @param data
    */
   public async update(id: ResourceId, data: Partial<T>): Promise<T> {
-    return this.storage.update<T>(this.resourceName, id, data);
+    return this.storage.update<T>(this.resourceName, id, {
+      updatedAt: new Date(),
+      ...data,
+    });
   }
 
   /**
