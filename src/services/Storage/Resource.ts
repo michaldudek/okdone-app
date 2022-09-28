@@ -6,6 +6,8 @@ export type Resource = {
   updatedAt?: Date;
 };
 
+export type PartialWithId<T extends Resource> = Partial<T> & Pick<T, 'id'>;
+
 export type FindCriteria<T extends Resource> = {
   where?: { [key in keyof T]?: string };
   orderBy?: keyof T;

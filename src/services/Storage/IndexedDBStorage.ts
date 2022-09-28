@@ -86,7 +86,9 @@ export class IndexedDBStorage implements StorageInterface {
     resource: string,
     id: ResourceId,
   ): Promise<T | undefined> {
-    throw new Error('Method not implemented.');
+    const db = await this.connect();
+    const item = await db.get(resource, id);
+    return item;
   }
 
   public async update<T extends Resource>(
@@ -94,7 +96,23 @@ export class IndexedDBStorage implements StorageInterface {
     id: ResourceId,
     data: Partial<T>,
   ): Promise<T> {
-    throw new Error('Method not implemented.');
+    const db = await this.connect();
+
+    const item = await this.read(resource, id);
+    if (!item) {
+      throw new Error(
+        `Cannot update ${resource} ${id}, because it does not exist.`,
+      );
+    }
+
+    const newData = {
+      ...item,
+      ...data,
+    } as T;
+
+    await db.put(resource, newData);
+
+    return newData;
   }
 
   public async delete(resource: string, id: ResourceId): Promise<void> {
@@ -127,7 +145,6 @@ export class IndexedDBStorage implements StorageInterface {
             // remove indexes no longer wanted
             Array.from(store.indexNames).forEach((indexName) => {
               if (!resource.indexes.includes(indexName)) {
-                console.log('delete index', indexName);
                 store.deleteIndex(indexName);
               }
             });
@@ -135,7 +152,6 @@ export class IndexedDBStorage implements StorageInterface {
             // add new indexes
             resource.indexes.forEach((indexName) => {
               if (!store.indexNames.contains(indexName)) {
-                console.log('create index', indexName);
                 store.createIndex(indexName, indexName);
               }
             });
