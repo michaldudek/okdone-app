@@ -4,6 +4,8 @@ import { MemoryStorage } from './MemoryStorage';
 import { Repository } from './Repository';
 import { Resource } from './Resource';
 
+export { Eq, In } from './Filters';
+export type { FindCriteria } from './Filters';
 export * from './Repository';
 export * from './Resource';
 export * from './StorageInterface';

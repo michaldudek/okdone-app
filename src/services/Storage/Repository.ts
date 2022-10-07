@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-import { FindCriteria, Resource, ResourceId } from './Resource';
+import { FindCriteria } from './Filters';
+import { Resource, ResourceId } from './Resource';
 import { StorageInterface } from './StorageInterface';
 
 export class Repository<T extends Resource = Resource> {

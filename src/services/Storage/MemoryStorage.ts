@@ -1,4 +1,5 @@
-import { FindCriteria, Resource, ResourceId } from './Resource';
+import { FindCriteria } from './Filters';
+import { Resource, ResourceId } from './Resource';
 import { StorageInterface } from './StorageInterface';
 
 export class MemoryStorage implements StorageInterface {

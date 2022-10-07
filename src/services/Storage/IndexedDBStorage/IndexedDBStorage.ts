@@ -3,13 +3,8 @@ import {
   IDBPObjectStore,
   openDB,
 } from 'idb';
-import {
-  FindCriteria,
-  FindFilter,
-  isFindFilterOperator,
-  Resource,
-  ResourceId,
-} from '../Resource';
+import { FindCriteria, FindFilter, isFindFilterOperator } from '../Filters';
+import { Resource, ResourceId } from '../Resource';
 import { StorageInterface } from '../StorageInterface';
 import { NULL_VALUE, transformOnRead, transformOnWrite } from './nullHandling';
 import { combineResults, cursorToArray, mergeResults } from './resultHelpers';

@@ -1,5 +1,6 @@
+import { FindCriteria } from './Filters';
 import { MemoryStorage } from './MemoryStorage';
-import { FindCriteria, Resource, ResourceId } from './Resource';
+import { Resource, ResourceId } from './Resource';
 import { StorageInterface } from './StorageInterface';
 
 export class LocalStorage implements StorageInterface {
