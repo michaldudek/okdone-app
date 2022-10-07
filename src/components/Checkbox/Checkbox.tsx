@@ -4,19 +4,19 @@ import * as RadixCheckbox from '@radix-ui/react-checkbox';
 import { FunctionComponent } from 'react';
 
 const StyledCheckbox = styled(RadixCheckbox.Root)`
-  --size: var(--12px);
+  --size: var(--16px);
 
-  background-color: var(--bg-content);
+  background-color: var(--background-secondary);
   padding: 0;
   width: var(--size);
   height: var(--size);
-  border: 1px solid var(--border-subtle);
+  border: 1px solid var(--divider);
   border-radius: var(--3px);
   transition: all 0.15s ease-in-out;
   outline: none;
 
   &:focus {
-    box-shadow: 0 0 0 2px var(--border-focus);
+    box-shadow: var(--highlight-shadow);
   }
 
   &:active {
@@ -24,11 +24,11 @@ const StyledCheckbox = styled(RadixCheckbox.Root)`
   }
 
   &[data-state='checked'] {
-    background-color: var(--bg-done);
+    background-color: var(--button-primary);
     border: none;
 
     &:focus {
-      box-shadow: var(--shadow-focus-alt);
+      box-shadow: var(--highlight-shadow);
     }
   }
 `;
@@ -37,9 +37,9 @@ const StyledIndicator = styled(RadixCheckbox.Indicator)`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: var(--12px);
-  height: var(--12px);
-  color: var(--text-inverse);
+  width: var(--size);
+  height: var(--size);
+  color: var(--button-label);
 `;
 
 export const Checkbox: FunctionComponent<RadixCheckbox.CheckboxProps> = (
