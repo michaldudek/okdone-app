@@ -1,11 +1,5 @@
 import { Brand } from './Brand';
 
-// type oneToNine = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-// type zeroToNine = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
-
-// type YYYY = `20${zeroToNine}${zeroToNine}`;
-// type MM = `0${oneToNine}` | `1${0 | 1 | 2}`;
-// type DD = `${0}${oneToNine}` | `${1 | 2}${zeroToNine}` | `3${0 | 1}`;
 type YYYY = `20${number}${number}`;
 type MM = `0${number}` | '10' | '11' | '12';
 type DD = `0${number}` | `1${number}` | `2${number}` | '30' | '31';
@@ -30,3 +24,8 @@ export const dateStringToDate = (dateString: DateString): Date => {
 export const todayToDateString = (): DateString => {
   return dateToDateString(new Date());
 };
+
+export const toDateString = (str: RawDateString): DateString =>
+  str as DateString;
+
+export const isDateString = (str: RawDateString): str is DateString => true;
