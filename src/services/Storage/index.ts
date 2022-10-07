@@ -14,7 +14,8 @@ export const memory = new MemoryStorage();
 export const local = new LocalStorage('okdone');
 export const indexedDb = new IndexedDBStorage('okdone', 3);
 
-const REPOSITORY_MAP: Record<string, Repository> = {};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const REPOSITORY_MAP: Record<string, Repository<any>> = {};
 
 /**
  * Register a custom repository for given resource.
@@ -38,9 +39,12 @@ export const registerRepository = <T extends Resource>(
  *
  * @param resourceName Name of the resource.
  */
-export const getRepository = <T extends Resource>(
+export const getRepository = <
+  T extends Resource,
+  R extends Repository<T> = Repository<T>,
+>(
   resourceName: string,
-): Repository<T> => {
+): R => {
   let repository = REPOSITORY_MAP[resourceName];
 
   if (!repository) {
@@ -48,5 +52,5 @@ export const getRepository = <T extends Resource>(
     REPOSITORY_MAP[resourceName] = repository;
   }
 
-  return repository as Repository<T>;
+  return repository as R;
 };

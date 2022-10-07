@@ -1,13 +1,14 @@
-import { Task, TASK_RESOURCE_NAME } from 'features/Tasks/types';
-import { indexedDb, registerRepository, Repository } from 'services/Storage';
+import { TASK_RESOURCE_NAME } from 'features/Tasks/types';
+import { indexedDb, registerRepository } from 'services/Storage';
+import { TasksRepository } from './TasksRepository';
 
 export * from './containers/TasksView';
 export * from './types';
 
 registerRepository(
   TASK_RESOURCE_NAME,
-  new Repository<Task>(
+  new TasksRepository(
     TASK_RESOURCE_NAME,
-    indexedDb.registerResource(TASK_RESOURCE_NAME, 6, {}, ['createdAt']),
+    indexedDb.registerResource(TASK_RESOURCE_NAME, 7, {}, ['completedDate']),
   ),
 );

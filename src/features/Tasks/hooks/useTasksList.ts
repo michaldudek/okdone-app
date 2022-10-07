@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { TasksRepository } from 'features/Tasks/TasksRepository';
 import { useCallback } from 'react';
 import { getRepository, PartialWithId } from 'services/Storage';
 import { todayToDateString } from 'types/DateString';
@@ -21,7 +22,7 @@ type UseTasksListReturnType = {
 };
 
 export const useTasksList = (): UseTasksListReturnType => {
-  const repository = getRepository<Task>(TASK_RESOURCE_NAME);
+  const repository = getRepository<Task, TasksRepository>(TASK_RESOURCE_NAME);
 
   const queryClient = useQueryClient();
 
@@ -29,16 +30,12 @@ export const useTasksList = (): UseTasksListReturnType => {
     data: tasks,
     isLoading,
     error,
-  } = useQuery<Task[]>([TASK_RESOURCE_NAME], () =>
-    repository.find({
-      orderBy: 'createdAt',
-      orderDir: 'asc',
-    }),
-  );
+  } = useQuery<Task[]>([TASK_RESOURCE_NAME], () => repository.findToday());
 
   const { mutateAsync: addTask } = useMutation(
     (newTask: NewTask) => repository.create(newTask),
     {
+      // TODO optimistic updates when we connect to an API over the network
       onSuccess: () => {
         queryClient.invalidateQueries([TASK_RESOURCE_NAME]);
       },
