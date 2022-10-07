@@ -1,6 +1,18 @@
-import { IDBPDatabase as IDBPDatabaseInterface, openDB } from 'idb';
-import { FindCriteria, Resource, ResourceId } from 'services/Storage/Resource';
-import { StorageInterface } from 'services/Storage/StorageInterface';
+import {
+  IDBPDatabase as IDBPDatabaseInterface,
+  IDBPObjectStore,
+  openDB,
+} from 'idb';
+import {
+  FindCriteria,
+  FindFilter,
+  isFindFilterOperator,
+  Resource,
+  ResourceId,
+} from '../Resource';
+import { StorageInterface } from '../StorageInterface';
+import { NULL_VALUE, transformOnRead, transformOnWrite } from './nullHandling';
+import { combineResults, cursorToArray, mergeResults } from './resultHelpers';
 
 const DEFAULT_PARAMETERS: IDBObjectStoreParameters = { keyPath: 'id' };
 
@@ -52,24 +64,40 @@ export class IndexedDBStorage implements StorageInterface {
 
   public async list<T extends Resource>(
     resource: string,
-    criteria?: FindCriteria<T> | undefined,
+    criteria: FindCriteria<T> = {},
   ): Promise<T[]> {
+    const { where, orderBy, orderDir = 'asc', limit, start = 0 } = criteria;
     const db = await this.connect();
-    let results = [];
+    let results: T[] = [];
 
-    // TODO implement criteria
+    const tx = db.transaction(resource, 'readonly');
 
-    if (criteria?.orderBy) {
-      results = await db.getAllFromIndex(resource, criteria.orderBy.toString());
+    if (where) {
+      // TODO implement and test criteria properly
+      const resultSets = await Promise.all<T[]>(
+        Object.entries(where).map(([key, value]) =>
+          this.filter(tx.store, key, value),
+        ),
+      );
+
+      results = combineResults<T>(resultSets);
     } else {
-      results = await db.getAll(resource);
+      results = await tx.store.getAll();
     }
 
-    if (criteria?.orderDir === 'desc') {
-      results.reverse();
+    tx.commit();
+
+    if (orderBy) {
+      results.sort((a, b) => {
+        if (orderDir === 'desc') {
+          return a[orderBy] < b[orderBy] ? 1 : -1;
+        }
+
+        return a[orderBy] > b[orderBy] ? 1 : -1;
+      });
     }
 
-    return results;
+    return results.slice(start, limit).map((item) => transformOnRead(item));
   }
 
   public async create<T extends Resource>(
@@ -77,7 +105,7 @@ export class IndexedDBStorage implements StorageInterface {
     data: T,
   ): Promise<T> {
     const db = await this.connect();
-    await db.add(resource, data);
+    await db.add(resource, transformOnWrite(data));
 
     return data;
   }
@@ -88,7 +116,7 @@ export class IndexedDBStorage implements StorageInterface {
   ): Promise<T | undefined> {
     const db = await this.connect();
     const item = await db.get(resource, id);
-    return item;
+    return transformOnRead(item);
   }
 
   public async update<T extends Resource>(
@@ -110,7 +138,7 @@ export class IndexedDBStorage implements StorageInterface {
       ...data,
     } as T;
 
-    await db.put(resource, newData);
+    await db.put(resource, transformOnWrite(newData));
 
     return newData;
   }
@@ -161,5 +189,53 @@ export class IndexedDBStorage implements StorageInterface {
     }
 
     return this.db;
+  }
+
+  private async filter<T extends Resource>(
+    store: IDBPObjectStore,
+    key: string,
+    value: FindFilter<T>,
+  ): Promise<T[]> {
+    if (value === null) {
+      return this.filterEq<T>(store, key, NULL_VALUE);
+    }
+
+    if (typeof value === 'string' || typeof value === 'number') {
+      return this.filterEq<T>(store, key, value);
+    }
+
+    if (isFindFilterOperator(value)) {
+      switch (value.operator) {
+        case 'in':
+          return this.filterIn(store, key, value.value);
+        default:
+          throw new Error(
+            `FindFilterOperator "${value.operator}" is not implemented in IndexedDBStorage yet.`,
+          );
+      }
+    }
+
+    return [];
+  }
+
+  private async filterEq<T extends Resource>(
+    store: IDBPObjectStore,
+    key: string,
+    value: string | number,
+  ): Promise<T[]> {
+    const range = IDBKeyRange.only(value);
+    const cursor = await store.index(key).openCursor(range);
+    return !cursor ? [] : cursorToArray<T>(cursor);
+  }
+
+  private async filterIn<T extends Resource>(
+    store: IDBPObjectStore,
+    key: string,
+    values: (string | number | null)[],
+  ): Promise<T[]> {
+    const resultSets = await Promise.all(
+      values.map((val) => this.filterEq<T>(store, key, val ?? NULL_VALUE)),
+    );
+    return mergeResults(resultSets);
   }
 }
