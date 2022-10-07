@@ -1,6 +1,7 @@
 import { css, Global } from '@emotion/react';
 import reset from 'emotion-reset';
 import { FunctionComponent } from 'react';
+import { Color, rgba, rgbToHex } from 'styles/colors';
 import { MediaQuery } from './breakpoints';
 import { pxToRem } from './pxToRem';
 
@@ -12,54 +13,62 @@ export const GlobalStyles: FunctionComponent = () => (
       html {
         font-size: 16px;
         color: var(--text-primary);
+        background-color: var(--background-primary);
       }
 
       * {
         box-sizing: border-box;
       }
 
+      /* handy pixels to rems */
       :root {
         ${[
           2, 3, 4, 6, 8, 10, 12, 14, 16, 20, 24, 28, 32, 36, 40, 44, 48, 50, 52,
           56, 60, 64, 70, 80, 90, 100, 120,
         ].map((px) => `--${px}px: ${pxToRem(px)}\n`)}
+      }
 
-        /* color pallete */
-        --color-black-full: #000;
-        --color-black: #111;
-        --color-gray-dark: #666;
-        --color-gray: #aaa;
-        --color-white: #fff;
-        --color-white-bg: #f2f4f8;
-        --color-blue: #32cbff;
-        --color-green: #60a561;
-        --color-red: #b02e0c;
+      /* color pallete */
+      :root {
+        /* color-scheme: light; */
 
-        /* default theme */
-        --bg-primary: var(--color-white-bg);
-        --bg-content: var(--color-white);
-        --bg-done: var(--color-blue);
+        --color-accent: ${rgbToHex(Color.Blue)};
+        --color-success: ${rgbToHex(Color.Green)};
+        --color-warning: ${rgbToHex(Color.Yellow)};
+        --color-error: ${rgbToHex(Color.Red)};
 
-        --border-subtle: var(--color-gray);
-        --border-focus: var(--color-blue);
+        --accent-primary: var(--color-accent);
+        --accent-secondary: var(--color-success);
+        --accent-tertiary: var(--color-warning);
+        --accent-quarternary: var(--color-error);
 
-        --text-primary: var(--color-black);
-        --text-highlight: var(--color-black-full);
-        --text-disabled: var(--color-gray-dark);
-        --text-inverse: var(--color-white);
+        --background-accent: var(--accent-primary);
+        --background-primary: ${rgbToHex(Color.White)};
+        --background-secondary: ${rgbToHex(Color.Gray6)};
+        --text-primary: ${rgbToHex(Color.Dark)};
+        --text-secondary: ${rgba(Color.Dark, 0.6)};
+        --text-tertiary: ${rgba(Color.Dark, 0.3)};
+        --text-quaternary: ${rgba(Color.Dark, 0.18)};
+        --text-inverse: ${rgbToHex(Color.White)};
+        --divider: ${rgbToHex(Color.Gray4)};
+        --fill-primary: ${rgba(Color.Gray, 0.2)};
+        --fill-secondary: ${rgba(Color.Gray, 0.16)};
+        --fill-tertiary: ${rgba(Color.Gray, 0.12)};
+        --fill-quarternary: ${rgba(Color.Gray, 0.08)};
+        --fill-accent-primary: ${rgba(Color.Blue, 0.08)};
+        --fill-accent-success: ${rgba(Color.Green, 0.12)};
+        --fill-accent-warning: ${rgba(Color.Yellow, 0.1)};
+        --fill-accent-error: ${rgba(Color.Red, 0.1)};
 
-        --shadow-focus: 0 0 0 2px var(--border-focus);
-        --shadow-focus-alt: 0 0 0 2px var(--border-subtle);
-        --shadow-light: 0 2px 10px var(--color-gray-dark);
+        --button-primary: var(--accent-primary);
+        --button-label: var(--text-inverse);
+
+        --highlight-shadow: 0 0 0 2px var(--divider);
       }
 
       #root {
         width: 100vw;
         height: 100vh;
-
-        /* gradient copied from grabient.com */
-        background-color: #8bc6ec;
-        background-image: linear-gradient(135deg, #8bc6ec 0%, #9599e2 100%);
 
         ${MediaQuery.Tablet} {
           display: flex;
