@@ -58,6 +58,7 @@ export class Repository<T extends Resource = Resource> {
     const newData = {
       id: uuidv4(),
       createdAt: new Date(),
+      updatedAt: null,
       ...data,
     } as T;
     return this.storage.create<T>(this.resourceName, newData);
