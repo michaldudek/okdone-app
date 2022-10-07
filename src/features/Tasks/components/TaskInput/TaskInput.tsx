@@ -1,11 +1,9 @@
 import { FunctionComponent, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import { NewTask } from '../../types';
-
-export type OnAddFn = (task: NewTask) => void;
+import { AddTaskFn } from '../../hooks/useTasksList';
 
 type Props = {
-  onAdd: OnAddFn;
+  onAdd: AddTaskFn;
 };
 
 type FormData = {
@@ -19,7 +17,6 @@ export const TaskInput: FunctionComponent<Props> = ({ onAdd }) => {
     (data: FormData) => {
       onAdd({
         name: data.name,
-        createdAt: new Date(),
       });
       reset();
     },

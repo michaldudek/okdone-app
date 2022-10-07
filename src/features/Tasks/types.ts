@@ -1,8 +1,12 @@
-export type Task = {
-  id: string;
+import { Resource } from 'services/Storage';
+import { DateString } from 'types/DateString';
+
+export const TASK_RESOURCE_NAME = 'tasks';
+
+export type Task = Resource & {
   name: string;
-  createdAt: Date;
-  completedAt?: Date;
+  completedAt: Date | null;
+  completedDate: DateString | null;
 };
 
-export type NewTask = Omit<Task, 'id' | 'completedAt'>;
+export type NewTask = Pick<Task, 'name'>;

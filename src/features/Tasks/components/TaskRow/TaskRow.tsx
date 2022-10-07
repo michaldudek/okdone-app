@@ -1,10 +1,12 @@
 import styled from '@emotion/styled';
 import { Checkbox } from 'components/Checkbox';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, memo } from 'react';
+import { SetTaskCompletedFn } from '../../hooks/useTasksList';
 import { Task } from '../../types';
 
 type Props = {
   task: Task;
+  setTaskCompleted: SetTaskCompletedFn;
 };
 
 const Container = styled.div`
@@ -18,13 +20,24 @@ const CheckboxWrap = styled.div`
   margin-right: var(--6px);
 `;
 
-export const TaskRow: FunctionComponent<Props> = ({ task }) => {
-  return (
-    <Container>
-      <CheckboxWrap>
-        <Checkbox />
-      </CheckboxWrap>
-      <span>{task.name}</span>
-    </Container>
-  );
-};
+export const TaskRow: FunctionComponent<Props> = memo(
+  ({ setTaskCompleted, task }) => {
+    const { name, completedDate } = task;
+
+    console.log('TaskRow', name);
+
+    return (
+      <Container>
+        <CheckboxWrap>
+          <Checkbox
+            checked={!!completedDate}
+            onCheckedChange={(checked) =>
+              setTaskCompleted(task, Boolean(checked))
+            }
+          />
+        </CheckboxWrap>
+        <span>{name}</span>
+      </Container>
+    );
+  },
+);
