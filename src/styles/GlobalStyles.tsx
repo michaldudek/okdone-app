@@ -1,7 +1,7 @@
 import { css, Global } from '@emotion/react';
+import { blue, lime, slate, tomato, yellow } from '@radix-ui/colors';
 import reset from 'emotion-reset';
 import { FunctionComponent } from 'react';
-import { Color, rgba, rgbToHex } from 'styles/colors';
 import { MediaQuery } from './breakpoints';
 import { pxToRem } from './pxToRem';
 
@@ -13,7 +13,7 @@ export const GlobalStyles: FunctionComponent = () => (
       html {
         font-size: 16px;
         color: var(--text-primary);
-        background-color: var(--background-primary);
+        background-color: var(--background-app);
       }
 
       * {
@@ -32,38 +32,43 @@ export const GlobalStyles: FunctionComponent = () => (
       :root {
         /* color-scheme: light; */
 
-        --color-accent: ${rgbToHex(Color.Blue)};
-        --color-success: ${rgbToHex(Color.Green)};
-        --color-warning: ${rgbToHex(Color.Yellow)};
-        --color-error: ${rgbToHex(Color.Red)};
+        --color-brand: ${blue.blue9};
+        --color-accent: var(--color-brand);
+        --color-success: ${lime.lime9};
+        --color-warning: ${yellow.yellow9};
+        --color-danger: ${tomato.tomato9};
 
         --accent-primary: var(--color-accent);
-        --accent-secondary: var(--color-success);
-        --accent-tertiary: var(--color-warning);
-        --accent-quarternary: var(--color-error);
+        --accent-success: var(--color-success);
+        --accent-warning: var(--color-warning);
+        --accent-danger: var(--color-danger);
 
         --background-accent: var(--accent-primary);
-        --background-primary: ${rgbToHex(Color.White)};
-        --background-secondary: ${rgbToHex(Color.Gray6)};
-        --text-primary: ${rgbToHex(Color.Dark)};
-        --text-secondary: ${rgba(Color.Dark, 0.6)};
-        --text-tertiary: ${rgba(Color.Dark, 0.3)};
-        --text-quaternary: ${rgba(Color.Dark, 0.18)};
-        --text-inverse: ${rgbToHex(Color.White)};
-        --divider: ${rgbToHex(Color.Gray4)};
-        --fill-primary: ${rgba(Color.Gray, 0.2)};
-        --fill-secondary: ${rgba(Color.Gray, 0.16)};
-        --fill-tertiary: ${rgba(Color.Gray, 0.12)};
-        --fill-quarternary: ${rgba(Color.Gray, 0.08)};
-        --fill-accent-primary: ${rgba(Color.Blue, 0.08)};
-        --fill-accent-success: ${rgba(Color.Green, 0.12)};
-        --fill-accent-warning: ${rgba(Color.Yellow, 0.1)};
-        --fill-accent-error: ${rgba(Color.Red, 0.1)};
+        --background-app: ${slate.slate1};
+        --background-subtle: ${slate.slate2};
+        --background-element: ${slate.slate3};
+        --background-hover: ${slate.slate4};
+        --background-active: ${slate.slate5};
+        --background-solid: ${slate.slate9};
+        --background-solid-hover: ${slate.slate10};
+        --text-primary: ${slate.slate12};
+        --text-secondary: ${slate.slate11};
+        --text-inverse: ${slate.slate1};
+        --border-subtle: ${slate.slate6};
+        --border-element: ${slate.slate7};
+        --border-hover: ${slate.slate8};
+        --divider: var(--border-subtle);
+        --fill-accent-primary: ${blue.blue3};
+        --fill-accent-success: ${lime.lime3};
+        --fill-accent-warning: ${yellow.yellow3};
+        --fill-accent-danger: ${tomato.tomato3};
 
         --button-primary: var(--accent-primary);
-        --button-label: var(--text-inverse);
+        --button-primary-label: var(--text-inverse);
+        --button-secondary: var(--background-element);
+        --button-secondary-label: var(--text-primary);
 
-        --highlight-shadow: 0 0 0 2px var(--divider);
+        --highlight-shadow: 0 0 0 2px var(--border-subtle);
       }
 
       #root {

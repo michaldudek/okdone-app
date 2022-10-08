@@ -6,11 +6,11 @@ import { FunctionComponent } from 'react';
 const StyledCheckbox = styled(RadixCheckbox.Root)`
   --size: var(--16px);
 
-  background-color: var(--background-secondary);
+  background-color: var(--background-subtle);
   padding: 0;
   width: var(--size);
   height: var(--size);
-  border: 1px solid var(--divider);
+  border: 1px solid var(--border-subtle);
   border-radius: var(--3px);
   transition: all 0.15s ease-in-out;
   outline: none;
@@ -39,7 +39,7 @@ const StyledIndicator = styled(RadixCheckbox.Indicator)`
   justify-content: center;
   width: var(--size);
   height: var(--size);
-  color: var(--button-label);
+  color: var(--button-primary-label);
 `;
 
 export const Checkbox: FunctionComponent<RadixCheckbox.CheckboxProps> = (
