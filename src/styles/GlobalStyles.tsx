@@ -19,6 +19,10 @@ export const GlobalStyles: FunctionComponent = () => (
         background-color: var(--background-app);
       }
 
+      body {
+        font-size: var(--14px);
+      }
+
       * {
         box-sizing: border-box;
       }
