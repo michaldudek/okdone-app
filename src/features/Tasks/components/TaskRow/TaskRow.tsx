@@ -1,5 +1,3 @@
-import styled from '@emotion/styled';
-import { Checkbox } from 'components/Checkbox';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import {
   FunctionComponent,
@@ -18,13 +16,6 @@ type Props = {
   task: Task;
   setTaskCompleted: SetTaskCompletedFn;
 };
-
-const CheckboxWrap = styled.div`
-  --size: var(--16px);
-  width: var(--size);
-  height: var(--size);
-  margin-right: var(--6px);
-`;
 
 export const TaskRow: FunctionComponent<Props> = memo(
   ({ setTaskCompleted, task }) => {
@@ -72,16 +63,14 @@ export const TaskRow: FunctionComponent<Props> = memo(
         onDoubleClick={handleDoubleClick}
         aria-expanded={isOpen}
       >
-        <CheckboxWrap>
-          <Checkbox
-            tabIndex={-1}
-            checked={isCompleted}
-            onCheckedChange={(checked) =>
-              setTaskCompleted(task, Boolean(checked))
-            }
-          />
-        </CheckboxWrap>
         <span>{name}</span>
+        <TaskRowCheckbox
+          tabIndex={-1}
+          checked={isCompleted}
+          onCheckedChange={(checked) =>
+            setTaskCompleted(task, Boolean(checked))
+          }
+        />
       </TaskRowContainer>
     );
   },
