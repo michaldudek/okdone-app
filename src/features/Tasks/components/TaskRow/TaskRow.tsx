@@ -1,3 +1,4 @@
+import { TaskRowFooter } from 'features/Tasks/components/TaskRow/TaskRowFooter';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import {
   FunctionComponent,
@@ -14,6 +15,7 @@ import { Task } from '../../types';
 import { taskStatus } from '../../utils/taskStatus';
 import { TaskRowCheckbox } from './TaskRowCheckbox';
 import { TaskRowContainer } from './TaskRowContainer';
+import { TaskRowHeader } from './TaskRowHeader';
 
 type Props = {
   task: Task;
@@ -76,16 +78,19 @@ export const TaskRow: FunctionComponent<Props> = memo(
         aria-expanded={isOpen}
         data-status={taskStatus(task)}
       >
-        <TaskRowCheckbox
-          tabIndex={-1}
-          checked={isCompleted}
-          onCheckedChange={(checked) =>
-            setTaskCompleted(task, Boolean(checked))
-          }
-        />
-        <TaskRowTitle onChange={handleChange} data-status={taskStatus(task)}>
-          {name}
-        </TaskRowTitle>
+        <TaskRowHeader>
+          <TaskRowCheckbox
+            tabIndex={-1}
+            checked={isCompleted}
+            onCheckedChange={(checked) =>
+              setTaskCompleted(task, Boolean(checked))
+            }
+          />
+          <TaskRowTitle onChange={handleChange} data-status={taskStatus(task)}>
+            {name}
+          </TaskRowTitle>
+        </TaskRowHeader>
+        {isOpen && <TaskRowFooter task={task} />}
       </TaskRowContainer>
     );
   },
