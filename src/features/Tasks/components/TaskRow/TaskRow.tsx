@@ -9,7 +9,11 @@ import {
   useRef,
   useState,
 } from 'react';
-import { SetTaskCompletedFn, UpdateTaskFn } from '../../hooks/useTasksList';
+import {
+  DeleteTaskFn,
+  SetTaskCompletedFn,
+  UpdateTaskFn,
+} from '../../hooks/useTasksList';
 import { TaskRowTitle } from '../../TaskRowTitle';
 import { Task } from '../../types';
 import { taskStatus } from '../../utils/taskStatus';
@@ -21,10 +25,11 @@ type Props = {
   task: Task;
   setTaskCompleted: SetTaskCompletedFn;
   updateTask: UpdateTaskFn;
+  deleteTask: DeleteTaskFn;
 };
 
 export const TaskRow: FunctionComponent<Props> = memo(
-  ({ setTaskCompleted, updateTask, task }) => {
+  ({ setTaskCompleted, updateTask, deleteTask, task }) => {
     const containerRef = useRef<HTMLDivElement>(null);
 
     const [isOpen, setOpen] = useState(false);
@@ -52,9 +57,13 @@ export const TaskRow: FunctionComponent<Props> = memo(
           case 'Escape':
             setOpen(false);
             break;
+
+          case 'Backspace':
+            deleteTask(task.id);
+            break;
         }
       },
-      [isCompleted, setTaskCompleted, task],
+      [isCompleted, setTaskCompleted, deleteTask, task],
     );
 
     const handleDoubleClick = useCallback<MouseEventHandler>((event) => {

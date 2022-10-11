@@ -4,7 +4,8 @@ import { TaskList } from '../../components/TaskList';
 import { useTasksList } from '../../hooks/useTasksList';
 
 export const TasksView: FunctionComponent = () => {
-  const { tasks, addTask, setTaskCompleted, updateTask } = useTasksList();
+  const { tasks, addTask, setTaskCompleted, updateTask, deleteTask } =
+    useTasksList();
 
   return (
     <div>
@@ -12,6 +13,7 @@ export const TasksView: FunctionComponent = () => {
         tasks={tasks || []}
         setTaskCompleted={setTaskCompleted}
         updateTask={updateTask}
+        deleteTask={deleteTask}
       />
       <TaskInput onAdd={addTask} />
     </div>

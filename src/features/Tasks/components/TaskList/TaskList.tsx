@@ -1,5 +1,9 @@
 import { FunctionComponent } from 'react';
-import { SetTaskCompletedFn, UpdateTaskFn } from '../../hooks/useTasksList';
+import {
+  DeleteTaskFn,
+  SetTaskCompletedFn,
+  UpdateTaskFn,
+} from '../../hooks/useTasksList';
 import { Task } from '../../types';
 import { TaskRow } from '../TaskRow';
 
@@ -7,12 +11,14 @@ type Props = {
   tasks: Task[];
   setTaskCompleted: SetTaskCompletedFn;
   updateTask: UpdateTaskFn;
+  deleteTask: DeleteTaskFn;
 };
 
 export const TaskList: FunctionComponent<Props> = ({
   tasks,
   setTaskCompleted,
   updateTask,
+  deleteTask,
 }) => {
   return (
     <ul>
@@ -23,6 +29,7 @@ export const TaskList: FunctionComponent<Props> = ({
             task={task}
             setTaskCompleted={setTaskCompleted}
             updateTask={updateTask}
+            deleteTask={deleteTask}
           />
         </li>
       ))}
