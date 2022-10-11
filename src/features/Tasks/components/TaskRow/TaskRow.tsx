@@ -17,6 +17,9 @@ const Container = styled.div`
 `;
 
 const CheckboxWrap = styled.div`
+  --size: var(--16px);
+  width: var(--size);
+  height: var(--size);
   margin-right: var(--6px);
 `;
 
