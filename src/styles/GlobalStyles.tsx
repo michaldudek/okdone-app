@@ -4,13 +4,16 @@ import reset from 'emotion-reset';
 import { FunctionComponent } from 'react';
 import { MediaQuery } from './breakpoints';
 import { pxToRem } from './pxToRem';
+import { font } from './font';
 
 export const GlobalStyles: FunctionComponent = () => (
   <Global
     styles={css`
       ${reset}
+      ${font}
 
       html {
+        font-family: 'Noto Sans', sans-serif;
         font-size: 16px;
         color: var(--text-primary);
         background-color: var(--background-app);
