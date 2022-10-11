@@ -1,3 +1,3 @@
 export * from './breakpoints';
 export * from './GlobalStyles';
-export * from './pxToRem';
+export * from './utils/pxToRem';

@@ -3,8 +3,8 @@ import { blue, lime, slate, tomato, yellow } from '@radix-ui/colors';
 import reset from 'emotion-reset';
 import { FunctionComponent } from 'react';
 import { MediaQuery } from './breakpoints';
-import { pxToRem } from './pxToRem';
 import { font } from './font';
+import { pxToRem } from './utils/pxToRem';
 
 export const GlobalStyles: FunctionComponent = () => (
   <Global

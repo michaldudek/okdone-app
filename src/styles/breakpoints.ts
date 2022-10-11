@@ -1,4 +1,4 @@
-import { pxToRem } from 'styles/pxToRem';
+import { pxToRem } from './utils/pxToRem';
 
 const toMediaQuery = (px: number): string =>
   `@media (min-width: ${pxToRem(px)})`;
