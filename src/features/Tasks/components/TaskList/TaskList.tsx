@@ -1,16 +1,18 @@
 import { FunctionComponent } from 'react';
-import { SetTaskCompletedFn } from '../../hooks/useTasksList';
+import { SetTaskCompletedFn, UpdateTaskFn } from '../../hooks/useTasksList';
 import { Task } from '../../types';
 import { TaskRow } from '../TaskRow';
 
 type Props = {
   tasks: Task[];
   setTaskCompleted: SetTaskCompletedFn;
+  updateTask: UpdateTaskFn;
 };
 
 export const TaskList: FunctionComponent<Props> = ({
   tasks,
   setTaskCompleted,
+  updateTask,
 }) => {
   return (
     <ul>
@@ -20,6 +22,7 @@ export const TaskList: FunctionComponent<Props> = ({
             key={task.id}
             task={task}
             setTaskCompleted={setTaskCompleted}
+            updateTask={updateTask}
           />
         </li>
       ))}

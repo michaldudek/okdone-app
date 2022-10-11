@@ -4,6 +4,7 @@ import { TasksRepository } from './TasksRepository';
 
 export * from './containers/TasksView';
 export * from './types';
+export * from './utils/taskStatus';
 
 registerRepository(
   TASK_RESOURCE_NAME,

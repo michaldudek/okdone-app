@@ -10,3 +10,5 @@ export type Task = Resource & {
 };
 
 export type NewTask = Pick<Task, 'name'>;
+
+export type TaskStatus = 'completed' | 'todo';

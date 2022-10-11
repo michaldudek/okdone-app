@@ -4,7 +4,7 @@ type HandlerFn = (event: MouseEvent) => void;
 
 export const useOnClickOutside = (
   handler: HandlerFn,
-  ref: RefObject<HTMLDivElement>,
+  ref: RefObject<HTMLElement>,
 ) => {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {

@@ -8,25 +8,29 @@ import {
   useRef,
   useState,
 } from 'react';
-import { SetTaskCompletedFn } from '../../hooks/useTasksList';
+import { SetTaskCompletedFn, UpdateTaskFn } from '../../hooks/useTasksList';
+import { TaskRowTitle } from '../../TaskRowTitle';
 import { Task } from '../../types';
+import { taskStatus } from '../../utils/taskStatus';
+import { TaskRowCheckbox } from './TaskRowCheckbox';
 import { TaskRowContainer } from './TaskRowContainer';
 
 type Props = {
   task: Task;
   setTaskCompleted: SetTaskCompletedFn;
+  updateTask: UpdateTaskFn;
 };
 
 export const TaskRow: FunctionComponent<Props> = memo(
-  ({ setTaskCompleted, task }) => {
+  ({ setTaskCompleted, updateTask, task }) => {
     const containerRef = useRef<HTMLDivElement>(null);
+
     const [isOpen, setOpen] = useState(false);
+
     const { name, completedDate } = task;
     const isCompleted = !!completedDate;
 
-    useOnClickOutside(() => {
-      setOpen(false);
-    }, containerRef);
+    useOnClickOutside(() => setOpen(false), containerRef);
 
     console.log('TaskRow', name);
 
@@ -38,9 +42,10 @@ export const TaskRow: FunctionComponent<Props> = memo(
             setTaskCompleted(task, !isCompleted);
             break;
 
-          case 'Enter':
-            setOpen(true);
-            break;
+          // TODO find better key
+          // case 'Enter':
+          //   setOpen(true);
+          //   break;
 
           case 'Escape':
             setOpen(false);
@@ -55,6 +60,13 @@ export const TaskRow: FunctionComponent<Props> = memo(
       setOpen(true);
     }, []);
 
+    const handleChange = (newTitle: string) => {
+      updateTask({
+        id: task.id,
+        name: newTitle,
+      });
+    };
+
     return (
       <TaskRowContainer
         ref={containerRef}
@@ -62,8 +74,8 @@ export const TaskRow: FunctionComponent<Props> = memo(
         onKeyDown={handleKeyDown}
         onDoubleClick={handleDoubleClick}
         aria-expanded={isOpen}
+        data-status={taskStatus(task)}
       >
-        <span>{name}</span>
         <TaskRowCheckbox
           tabIndex={-1}
           checked={isCompleted}
@@ -71,6 +83,9 @@ export const TaskRow: FunctionComponent<Props> = memo(
             setTaskCompleted(task, Boolean(checked))
           }
         />
+        <TaskRowTitle onChange={handleChange} data-status={taskStatus(task)}>
+          {name}
+        </TaskRowTitle>
       </TaskRowContainer>
     );
   },

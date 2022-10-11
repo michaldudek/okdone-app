@@ -62,6 +62,7 @@ export const GlobalStyles: FunctionComponent = () => (
         --background-solid-hover: ${slate.slate10};
         --text-primary: ${slate.slate12};
         --text-secondary: ${slate.slate11};
+        --text-tertiary: ${slate.slate10};
         --text-inverse: ${slate.slate1};
         --border-subtle: ${slate.slate6};
         --border-element: ${slate.slate7};
