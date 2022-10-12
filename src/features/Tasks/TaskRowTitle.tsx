@@ -3,23 +3,42 @@ import {
   FocusEventHandler,
   FunctionComponent,
   KeyboardEventHandler,
+  useEffect,
   useRef,
 } from 'react';
+import { setCaretAtEnd } from 'utils/caret';
 
 type Props = {
   children: string;
+  isFocused?: boolean;
+  onBlur?: () => void;
   onChange?: (text: string) => void;
 };
 
 const Title: FunctionComponent<Props> = ({
   children,
+  isFocused = false,
+  onBlur,
   onChange,
   ...otherProps
 }) => {
   const refEl = useRef<HTMLDivElement>(null);
 
+  // if focus requested then set text caret at the end of the title
+  // (unless it already has focus)
+  useEffect(() => {
+    if (
+      isFocused &&
+      refEl.current &&
+      refEl.current !== document.activeElement
+    ) {
+      setCaretAtEnd(refEl.current);
+    }
+  }, [isFocused]);
+
   const handleBlur: FocusEventHandler = (event) => {
     onChange?.(event.target.textContent ?? '');
+    onBlur?.();
   };
 
   const handleKeyDown: KeyboardEventHandler<HTMLElement> = (event) => {
@@ -32,6 +51,10 @@ const Title: FunctionComponent<Props> = ({
 
       case 'Enter':
         event.preventDefault();
+        refEl.current?.blur();
+        break;
+
+      case 'Escape':
         refEl.current?.blur();
         break;
     }

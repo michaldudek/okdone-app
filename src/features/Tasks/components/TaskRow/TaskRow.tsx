@@ -33,6 +33,7 @@ export const TaskRow: FunctionComponent<Props> = memo(
     const containerRef = useRef<HTMLDivElement>(null);
 
     const [isOpen, setOpen] = useState(false);
+    const [isTitleFocused, setTitleFocused] = useState(false);
 
     const { title, completedDate } = task;
     const isCompleted = !!completedDate;
@@ -40,8 +41,8 @@ export const TaskRow: FunctionComponent<Props> = memo(
     useOnClickOutside(() => setOpen(false), containerRef);
 
     const handleKeyDown = useCallback<KeyboardEventHandler>(
-      ({ key }) => {
-        switch (key) {
+      (event) => {
+        switch (event.key) {
           case ' ':
           case 'Space':
             setTaskCompleted(task, !isCompleted);
@@ -60,6 +61,10 @@ export const TaskRow: FunctionComponent<Props> = memo(
             deleteTask(task.id);
             break;
         }
+
+        if (event.key.match(/^[\w_£§!@#$%^&*()_=+{}[\];:'"|\\~`,./<>?-]{1}$/)) {
+          setTitleFocused(true);
+        }
       },
       [isCompleted, setTaskCompleted, deleteTask, task],
     );
@@ -75,6 +80,8 @@ export const TaskRow: FunctionComponent<Props> = memo(
         title: newTitle,
       });
     };
+
+    const handleTitleBlur = () => setTitleFocused(false);
 
     return (
       <TaskRowContainer
@@ -93,7 +100,12 @@ export const TaskRow: FunctionComponent<Props> = memo(
               setTaskCompleted(task, Boolean(checked))
             }
           />
-          <TaskRowTitle onChange={handleChange} data-status={taskStatus(task)}>
+          <TaskRowTitle
+            isFocused={isTitleFocused}
+            onBlur={handleTitleBlur}
+            onChange={handleChange}
+            data-status={taskStatus(task)}
+          >
             {title}
           </TaskRowTitle>
         </TaskRowHeader>
