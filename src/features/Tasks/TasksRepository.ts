@@ -6,6 +6,7 @@ export class TasksRepository extends Repository<Task> {
   public async create(data: Partial<Task>): Promise<Task> {
     return super.create({
       ...data,
+      order: data.order ?? Date.now(),
       completedAt: null,
       completedDate: null,
     });
@@ -16,7 +17,7 @@ export class TasksRepository extends Repository<Task> {
       where: {
         completedDate: In(todayToDateString(), null),
       },
-      orderBy: 'createdAt',
+      orderBy: 'order',
       orderDir: 'asc',
     });
   }

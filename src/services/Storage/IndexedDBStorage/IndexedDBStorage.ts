@@ -84,11 +84,13 @@ export class IndexedDBStorage implements StorageInterface {
 
     if (orderBy) {
       results.sort((a, b) => {
+        const aProp = a[orderBy] ?? 0;
+        const bProp = b[orderBy] ?? 0;
         if (orderDir === 'desc') {
-          return a[orderBy] < b[orderBy] ? 1 : -1;
+          return aProp < bProp ? 1 : -1;
         }
 
-        return a[orderBy] > b[orderBy] ? 1 : -1;
+        return aProp > bProp ? 1 : -1;
       });
     }
 
