@@ -1,17 +1,15 @@
 import {
   FunctionComponent,
+  KeyboardEvent,
   KeyboardEventHandler,
   memo,
+  MouseEvent,
   MouseEventHandler,
   useCallback,
+  useEffect,
+  useRef,
   useState,
 } from 'react';
-import { ToggleOpenTaskFn } from '../../containers/TaskList/useOpenTaskTracker';
-import {
-  DeleteTaskFn,
-  SetTaskCompletedFn,
-  UpdateTaskFn,
-} from '../../hooks/useTasksList';
 import { Task } from '../../types';
 import { taskStatus } from '../../utils/taskStatus';
 import { TaskRowCheckbox } from './TaskRowCheckbox';
@@ -20,82 +18,82 @@ import { TaskRowFooter } from './TaskRowFooter';
 import { TaskRowHeader } from './TaskRowHeader';
 import { TaskRowTitle } from './TaskRowTitle';
 
+const isWriting = (key: string) =>
+  /^[\w_£§!@#$%^&*()_=+{}[\];:'"|\\~`,./<>?-]{1}$/.test(key);
+
 type Props = {
   task: Task;
   isOpen?: boolean;
-  onToggleOpen?: ToggleOpenTaskFn;
-
-  setTaskCompleted: SetTaskCompletedFn;
-  updateTask: UpdateTaskFn;
-  deleteTask: DeleteTaskFn;
+  isFocused?: boolean;
+  onBlur?: (task: Task) => void;
+  onChange?: (task: Task, change: Partial<Task>) => void;
+  onCompleted?: (task: Task, complete?: boolean) => void;
+  onDoubleClick?: (task: Task, event: MouseEvent) => void;
+  onFocus?: (task: Task) => void;
+  onKeyDown?: (task: Task, event: KeyboardEvent) => void;
 };
 
 export const TaskRow: FunctionComponent<Props> = memo(
   ({
+    isFocused = false,
+    isOpen = false,
+    onBlur,
+    onChange,
+    onCompleted,
+    onDoubleClick,
+    onFocus,
+    onKeyDown,
     task,
-    isOpen,
-    onToggleOpen,
-    setTaskCompleted,
-    updateTask,
-    deleteTask,
   }) => {
+    const ref = useRef<HTMLDivElement>(null);
     const [isTitleFocused, setTitleFocused] = useState(false);
 
     const { title, completedDate } = task;
     const isCompleted = !!completedDate;
 
+    useEffect(() => {
+      if (isFocused && ref.current) {
+        ref.current.focus();
+      }
+    }, [isFocused]);
+
     const handleKeyDown = useCallback<KeyboardEventHandler>(
       (event) => {
-        switch (event.key) {
-          case ' ':
-          case 'Space':
-            setTaskCompleted(task, !isCompleted);
-            break;
+        onKeyDown?.(task, event);
 
-          case 'Enter':
-            if (event.shiftKey) {
-              onToggleOpen?.(task);
-            }
-            break;
-
-          case 'Escape':
-            onToggleOpen?.(task, false);
-            break;
-
-          case 'Backspace':
-            deleteTask(task.id);
-            break;
-        }
-
-        if (event.key.match(/^[\w_£§!@#$%^&*()_=+{}[\];:'"|\\~`,./<>?-]{1}$/)) {
+        if (isFocused && isWriting(event.key)) {
           setTitleFocused(true);
         }
       },
-      [setTaskCompleted, task, isCompleted, deleteTask, onToggleOpen],
+      [isFocused, onKeyDown, task],
     );
 
     const handleDoubleClick = useCallback<MouseEventHandler>(
       (event) => {
         event.preventDefault();
-        onToggleOpen?.(task, true);
+        onDoubleClick?.(task, event);
       },
-      [onToggleOpen, task],
+      [onDoubleClick, task],
     );
 
-    const handleChange = (newTitle: string) => {
-      updateTask({
-        id: task.id,
-        title: newTitle,
-      });
-    };
+    const handleChange = useCallback(
+      (title: string) => onChange?.(task, { title }),
+      [onChange, task],
+    );
 
     const handleTitleBlur = () => setTitleFocused(false);
 
+    const handleBlur = useCallback(() => onBlur?.(task), [onBlur, task]);
+    const handleFocus = useCallback(() => onFocus?.(task), [onFocus, task]);
+
     return (
       <TaskRowContainer
+        ref={ref}
         tabIndex={0}
-        onKeyDown={handleKeyDown}
+        onBlur={handleBlur}
         onDoubleClick={handleDoubleClick}
+        onFocus={handleFocus}
+        onKeyDown={handleKeyDown}
         aria-expanded={isOpen}
         data-status={taskStatus(task)}
       >
@@ -103,9 +101,7 @@ export const TaskRow: FunctionComponent<Props> = memo(
           <TaskRowCheckbox
             tabIndex={-1}
             checked={isCompleted}
-            onCheckedChange={(checked) =>
-              setTaskCompleted(task, Boolean(checked))
-            }
+            onCheckedChange={(checked) => onCompleted?.(task, Boolean(checked))}
           />
           <TaskRowTitle
             isFocused={isTitleFocused}
