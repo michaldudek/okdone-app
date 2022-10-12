@@ -1,14 +1,12 @@
-import { TaskRowFooter } from 'features/Tasks/components/TaskRow/TaskRowFooter';
-import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import {
   FunctionComponent,
   KeyboardEventHandler,
   memo,
   MouseEventHandler,
   useCallback,
-  useRef,
   useState,
 } from 'react';
+import { ToggleOpenTaskFn } from '../../containers/TaskList/useOpenTaskTracker';
 import {
   DeleteTaskFn,
   SetTaskCompletedFn,
@@ -18,27 +16,33 @@ import { Task } from '../../types';
 import { taskStatus } from '../../utils/taskStatus';
 import { TaskRowCheckbox } from './TaskRowCheckbox';
 import { TaskRowContainer } from './TaskRowContainer';
+import { TaskRowFooter } from './TaskRowFooter';
 import { TaskRowHeader } from './TaskRowHeader';
 import { TaskRowTitle } from './TaskRowTitle';
 
 type Props = {
   task: Task;
+  isOpen?: boolean;
+  onToggleOpen?: ToggleOpenTaskFn;
+
   setTaskCompleted: SetTaskCompletedFn;
   updateTask: UpdateTaskFn;
   deleteTask: DeleteTaskFn;
 };
 
 export const TaskRow: FunctionComponent<Props> = memo(
-  ({ setTaskCompleted, updateTask, deleteTask, task }) => {
-    const containerRef = useRef<HTMLDivElement>(null);
-
-    const [isOpen, setOpen] = useState(false);
+  ({
+    task,
+    isOpen,
+    onToggleOpen,
+    setTaskCompleted,
+    updateTask,
+    deleteTask,
+  }) => {
     const [isTitleFocused, setTitleFocused] = useState(false);
 
     const { title, completedDate } = task;
     const isCompleted = !!completedDate;
-
-    useOnClickOutside(() => setOpen(false), containerRef);
 
     const handleKeyDown = useCallback<KeyboardEventHandler>(
       (event) => {
@@ -50,12 +54,12 @@ export const TaskRow: FunctionComponent<Props> = memo(
 
           case 'Enter':
             if (event.shiftKey) {
-              setOpen((prev) => !prev);
+              onToggleOpen?.(task);
             }
             break;
 
           case 'Escape':
-            setOpen(false);
+            onToggleOpen?.(task, false);
             break;
 
           case 'Backspace':
@@ -67,13 +71,16 @@ export const TaskRow: FunctionComponent<Props> = memo(
           setTitleFocused(true);
         }
       },
-      [isCompleted, setTaskCompleted, deleteTask, task],
+      [setTaskCompleted, task, isCompleted, deleteTask, onToggleOpen],
     );
 
-    const handleDoubleClick = useCallback<MouseEventHandler>((event) => {
-      event.preventDefault();
-      setOpen(true);
-    }, []);
+    const handleDoubleClick = useCallback<MouseEventHandler>(
+      (event) => {
+        event.preventDefault();
+        onToggleOpen?.(task, true);
+      },
+      [onToggleOpen, task],
+    );
 
     const handleChange = (newTitle: string) => {
       updateTask({
@@ -86,7 +93,6 @@ export const TaskRow: FunctionComponent<Props> = memo(
 
     return (
       <TaskRowContainer
-        ref={containerRef}
         tabIndex={0}
         onKeyDown={handleKeyDown}
         onDoubleClick={handleDoubleClick}
