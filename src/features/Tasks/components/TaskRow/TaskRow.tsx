@@ -48,10 +48,11 @@ export const TaskRow: FunctionComponent<Props> = memo(
             setTaskCompleted(task, !isCompleted);
             break;
 
-          // TODO find better key
-          // case 'Enter':
-          //   setOpen(true);
-          //   break;
+          case 'Enter':
+            if (event.shiftKey) {
+              setOpen((prev) => !prev);
+            }
+            break;
 
           case 'Escape':
             setOpen(false);
