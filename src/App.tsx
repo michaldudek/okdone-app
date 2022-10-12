@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { AppContainer } from 'components/AppContainer';
-import { TasksView } from 'features/Tasks';
+import { TaskList } from 'features/Tasks';
 
 const Container = styled(AppContainer)`
   padding: var(--60px);
@@ -9,7 +9,7 @@ const Container = styled(AppContainer)`
 function App() {
   return (
     <Container>
-      <TasksView />
+      <TaskList />
     </Container>
   );
 }

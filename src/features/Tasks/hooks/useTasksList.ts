@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { TasksRepository } from 'features/Tasks/TasksRepository';
 import { useCallback } from 'react';
 import { getRepository, PartialWithId, ResourceId } from 'services/Storage';
 import { todayToDateString } from 'types/DateString';
+import { TasksRepository } from '../TasksRepository';
 import { NewTask, Task, TASK_RESOURCE_NAME } from '../types';
 
 export type AddTaskFn = (data: NewTask) => Promise<Task>;
@@ -14,7 +14,7 @@ export type SetTaskCompletedFn = (
 ) => Promise<Task>;
 
 type UseTasksListReturnType = {
-  tasks: Task[] | undefined;
+  tasks: Task[];
   addTask: AddTaskFn;
   updateTask: UpdateTaskFn;
   deleteTask: DeleteTaskFn;
@@ -73,7 +73,7 @@ export const useTasksList = (): UseTasksListReturnType => {
   );
 
   return {
-    tasks,
+    tasks: tasks ?? [],
     addTask,
     updateTask,
     deleteTask,
