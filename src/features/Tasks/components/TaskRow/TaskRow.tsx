@@ -14,12 +14,12 @@ import {
   SetTaskCompletedFn,
   UpdateTaskFn,
 } from '../../hooks/useTasksList';
-import { TaskRowTitle } from '../../TaskRowTitle';
 import { Task } from '../../types';
 import { taskStatus } from '../../utils/taskStatus';
 import { TaskRowCheckbox } from './TaskRowCheckbox';
 import { TaskRowContainer } from './TaskRowContainer';
 import { TaskRowHeader } from './TaskRowHeader';
+import { TaskRowTitle } from './TaskRowTitle';
 
 type Props = {
   task: Task;
