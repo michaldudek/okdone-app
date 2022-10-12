@@ -7,7 +7,7 @@ type Props = {
 };
 
 type FormData = {
-  name: string;
+  title: string;
 };
 
 export const TaskInput: FunctionComponent<Props> = ({ onAdd }) => {
@@ -16,7 +16,7 @@ export const TaskInput: FunctionComponent<Props> = ({ onAdd }) => {
   const handleAdd = useCallback(
     (data: FormData) => {
       onAdd({
-        name: data.name,
+        title: data.title,
       });
       reset();
     },
@@ -28,7 +28,7 @@ export const TaskInput: FunctionComponent<Props> = ({ onAdd }) => {
       <form onSubmit={handleSubmit(handleAdd)}>
         <input
           type="text"
-          {...register('name', { required: true, minLength: 1 })}
+          {...register('title', { required: true, minLength: 1 })}
         />
       </form>
     </div>

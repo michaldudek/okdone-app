@@ -34,12 +34,10 @@ export const TaskRow: FunctionComponent<Props> = memo(
 
     const [isOpen, setOpen] = useState(false);
 
-    const { name, completedDate } = task;
+    const { title, completedDate } = task;
     const isCompleted = !!completedDate;
 
     useOnClickOutside(() => setOpen(false), containerRef);
-
-    console.log('TaskRow', name);
 
     const handleKeyDown = useCallback<KeyboardEventHandler>(
       ({ key }) => {
@@ -74,7 +72,7 @@ export const TaskRow: FunctionComponent<Props> = memo(
     const handleChange = (newTitle: string) => {
       updateTask({
         id: task.id,
-        name: newTitle,
+        title: newTitle,
       });
     };
 
@@ -96,7 +94,7 @@ export const TaskRow: FunctionComponent<Props> = memo(
             }
           />
           <TaskRowTitle onChange={handleChange} data-status={taskStatus(task)}>
-            {name}
+            {title}
           </TaskRowTitle>
         </TaskRowHeader>
         {isOpen && <TaskRowFooter task={task} />}
