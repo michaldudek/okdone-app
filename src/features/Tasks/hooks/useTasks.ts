@@ -13,7 +13,7 @@ export type SetTaskCompletedFn = (
   complete?: boolean,
 ) => Promise<Task>;
 
-type UseTasksListReturnType = {
+type UseTasksReturn = {
   tasks: Task[];
   addTask: AddTaskFn;
   updateTask: UpdateTaskFn;
@@ -23,7 +23,7 @@ type UseTasksListReturnType = {
   isLoading: boolean;
 };
 
-export const useTasksList = (): UseTasksListReturnType => {
+export const useTasks = (): UseTasksReturn => {
   const repository = getRepository<Task, TasksRepository>(TASK_RESOURCE_NAME);
 
   const queryClient = useQueryClient();

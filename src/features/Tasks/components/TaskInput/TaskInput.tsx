@@ -1,6 +1,6 @@
 import { FunctionComponent, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import { AddTaskFn } from '../../hooks/useTasksList';
+import { AddTaskFn } from '../../hooks/useTasks';
 
 type Props = {
   onAdd: AddTaskFn;
