@@ -90,12 +90,14 @@ export const TaskRow: FunctionComponent<Props> = memo(
 
     const handleBlur = useCallback(() => onBlur?.(task), [onBlur, task]);
     const handleFocus = useCallback(() => onFocus?.(task), [onFocus, task]);
+    const handleClick = handleFocus;
 
     return (
       <TaskRowContainer
         ref={ref}
         tabIndex={0}
         onBlur={handleBlur}
+        onClick={handleClick}
         onDoubleClick={handleDoubleClick}
         onFocus={handleFocus}
         onKeyDown={handleKeyDown}
