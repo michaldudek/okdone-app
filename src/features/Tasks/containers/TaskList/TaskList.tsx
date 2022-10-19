@@ -1,13 +1,17 @@
 import { Task } from 'features/Tasks/types';
-import { findTaskAfter, findTaskBefore } from 'features/Tasks/utils/find';
+import {
+  findLastTask,
+  findTaskAfter,
+  findTaskBefore,
+} from 'features/Tasks/utils/find';
 import {
   FunctionComponent,
-  KeyboardEvent,
+  KeyboardEvent as ReactKeyboardEvent,
   MouseEvent,
   useCallback,
+  useEffect,
   useRef,
 } from 'react';
-import { TaskInput } from '../../components/TaskInput';
 import { TaskRow } from '../../components/TaskRow';
 import { useTasks } from '../../hooks/useTasks';
 import { useFocusedTaskTracker } from './useFocusedTaskTracker';
@@ -23,8 +27,26 @@ export const TaskList: FunctionComponent = () => {
   const { focusedTaskId, setFocus, onBlurTask, onFocusTask } =
     useFocusedTaskTracker();
 
+  useEffect(() => {
+    const handleAddNewTask = async (event: KeyboardEvent) => {
+      if (event.key.toLowerCase() === 'n' && event.ctrlKey) {
+        event.preventDefault();
+        const newTask = await addTask({
+          title: '',
+          taskBefore: findLastTask(tasks),
+        });
+        setFocus(newTask.id);
+      }
+    };
+
+    window.addEventListener('keydown', handleAddNewTask);
+    return () => {
+      window.removeEventListener('keydown', handleAddNewTask);
+    };
+  }, [addTask, setFocus, tasks]);
+
   const handleKeyDown = useCallback(
-    (task: Task, event: KeyboardEvent) => {
+    (task: Task, event: ReactKeyboardEvent) => {
       const actions: Record<string, () => void> = {
         ' ': () => setTaskCompleted(task, !task.completedAt),
         Space: () => setTaskCompleted(task, !task.completedAt),
@@ -117,7 +139,6 @@ export const TaskList: FunctionComponent = () => {
           </li>
         ))}
       </ul>
-      <TaskInput onAdd={addTask} />
     </>
   );
 };
