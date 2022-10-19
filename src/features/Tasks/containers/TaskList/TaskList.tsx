@@ -1,5 +1,5 @@
 import { Task } from 'features/Tasks/types';
-import { findNextTask, findPrevTask } from 'features/Tasks/utils/find';
+import { findTaskAfter, findTaskBefore } from 'features/Tasks/utils/find';
 import {
   FunctionComponent,
   KeyboardEvent,
@@ -28,21 +28,30 @@ export const TaskList: FunctionComponent = () => {
       const actions: Record<string, () => void> = {
         ' ': () => setTaskCompleted(task, !task.completedAt),
         Space: () => setTaskCompleted(task, !task.completedAt),
-        Enter: () => {
+        Enter: async () => {
           if (event.shiftKey) {
             toggleOpenTask(task);
+            return;
           }
+
+          const taskAfter = findTaskAfter(tasks, task);
+          const newTask = await addTask({
+            title: '',
+            taskBefore: task,
+            taskAfter: taskAfter,
+          });
+          setFocus(newTask.id);
         },
         Escape: () => toggleOpenTask(task, false),
         Backspace: () => deleteTask(task.id),
         ArrowUp: () => {
-          const prevTask = findPrevTask(tasks, task);
+          const prevTask = findTaskBefore(tasks, task);
           if (prevTask) {
             setFocus(prevTask.id);
           }
         },
         ArrowDown: () => {
-          const nextTask = findNextTask(tasks, task);
+          const nextTask = findTaskAfter(tasks, task);
           if (nextTask) {
             setFocus(nextTask.id);
           }
@@ -51,7 +60,7 @@ export const TaskList: FunctionComponent = () => {
 
       actions[event.key]?.();
     },
-    [deleteTask, setFocus, setTaskCompleted, tasks, toggleOpenTask],
+    [addTask, deleteTask, setFocus, setTaskCompleted, tasks, toggleOpenTask],
   );
 
   const handleDoubleClick = useCallback(

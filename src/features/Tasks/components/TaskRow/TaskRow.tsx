@@ -59,11 +59,11 @@ export const TaskRow: FunctionComponent<Props> = memo(
 
     const handleKeyDown = useCallback<KeyboardEventHandler>(
       (event) => {
-        onKeyDown?.(task, event);
-
         if (isFocused && isWriting(event.key)) {
           setTitleFocused(true);
         }
+
+        onKeyDown?.(task, event);
       },
       [isFocused, onKeyDown, task],
     );

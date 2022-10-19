@@ -1,6 +1,6 @@
 import { Task } from '../types';
 
-export const findNextTask = (
+export const findTaskBefore = (
   tasks: Task[],
   current: Task,
 ): Task | undefined => {
@@ -9,10 +9,10 @@ export const findNextTask = (
     return;
   }
 
-  return tasks[currIndex + 1];
+  return tasks[currIndex - 1];
 };
 
-export const findPrevTask = (
+export const findTaskAfter = (
   tasks: Task[],
   current: Task,
 ): Task | undefined => {
@@ -21,5 +21,5 @@ export const findPrevTask = (
     return;
   }
 
-  return tasks[currIndex - 1];
+  return tasks[currIndex + 1];
 };

@@ -35,7 +35,8 @@ export const useTasks = (): UseTasksReturn => {
   } = useQuery<Task[]>([TASK_RESOURCE_NAME], () => repository.findToday());
 
   const { mutateAsync: addTask } = useMutation(
-    (newTask: NewTask) => repository.create(newTask),
+    ({ taskBefore, taskAfter, ...newTask }: NewTask) =>
+      repository.create(newTask, { taskBefore, taskAfter }),
     {
       // TODO optimistic updates when we connect to an API over the network
       onSuccess: () => {
