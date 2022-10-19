@@ -1,4 +1,5 @@
 import {
+  ComponentProps,
   FunctionComponent,
   KeyboardEvent,
   KeyboardEventHandler,
@@ -46,7 +47,8 @@ export const TaskRow: FunctionComponent<Props> = memo(
     task,
   }) => {
     const ref = useRef<HTMLDivElement>(null);
-    const [isTitleFocused, setTitleFocused] = useState(false);
+    const [isTitleFocused, setTitleFocused] =
+      useState<ComponentProps<typeof TaskRowTitle>['isFocused']>(false);
 
     const { title, completedDate } = task;
     const isCompleted = !!completedDate;
@@ -60,16 +62,25 @@ export const TaskRow: FunctionComponent<Props> = memo(
     const handleKeyDown = useCallback<KeyboardEventHandler>(
       (event) => {
         if (isFocused && isWriting(event.key)) {
-          setTitleFocused(true);
+          setTitleFocused('end');
           return;
         }
 
         switch (event.key) {
           case 'Backspace':
             if (!event.metaKey && !event.ctrlKey) {
-              setTitleFocused(true);
+              setTitleFocused('end');
               return;
             }
+            break;
+
+          case 'ArrowRight':
+            setTitleFocused('end');
+            break;
+
+          case 'ArrowLeft':
+            setTitleFocused('start');
+            break;
         }
 
         onKeyDown?.(task, event);
@@ -80,7 +91,7 @@ export const TaskRow: FunctionComponent<Props> = memo(
     const handleDoubleClick = useCallback<MouseEventHandler>(
       (event) => {
         event.preventDefault();
-        setTitleFocused(true);
+        setTitleFocused('end');
         onDoubleClick?.(task, event);
       },
       [onDoubleClick, task],

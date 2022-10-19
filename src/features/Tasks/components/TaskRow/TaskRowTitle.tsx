@@ -7,11 +7,11 @@ import {
   useRef,
   useState,
 } from 'react';
-import { setCaretAtEnd } from 'utils/caret';
+import { setCaretAtEnd, setCaretAtStart } from 'utils/caret';
 
 type Props = {
   children: string;
-  isFocused?: boolean;
+  isFocused?: boolean | 'start' | 'end';
   onBlur?: () => void;
   onChange?: (text: string) => void;
 };
@@ -34,7 +34,11 @@ const Title: FunctionComponent<Props> = ({
       refEl.current &&
       refEl.current !== document.activeElement
     ) {
-      setCaretAtEnd(refEl.current);
+      if (isFocused === 'start') {
+        setCaretAtStart(refEl.current);
+      } else {
+        setCaretAtEnd(refEl.current);
+      }
     }
   }, [isFocused]);
 
