@@ -5,6 +5,7 @@ import {
   KeyboardEventHandler,
   useEffect,
   useRef,
+  useState,
 } from 'react';
 import { setCaretAtEnd } from 'utils/caret';
 
@@ -23,6 +24,7 @@ const Title: FunctionComponent<Props> = ({
   ...otherProps
 }) => {
   const refEl = useRef<HTMLDivElement>(null);
+  const [hasContent, setHasContent] = useState(children.length > 0);
 
   // if focus requested then set text caret at the end of the title
   // (unless it already has focus)
@@ -42,6 +44,10 @@ const Title: FunctionComponent<Props> = ({
   };
 
   const handleKeyDown: KeyboardEventHandler<HTMLElement> = (event) => {
+    if (refEl.current) {
+      setHasContent(!!refEl.current.textContent);
+    }
+
     switch (event.key) {
       case ' ':
       case 'Space':
@@ -70,6 +76,7 @@ const Title: FunctionComponent<Props> = ({
       onKeyDown={handleKeyDown}
       onBlur={handleBlur}
       tabIndex={-1}
+      data-placeholder={!hasContent ? 'What do you want to do?' : undefined}
       {...otherProps}
     >
       {children}
@@ -83,5 +90,15 @@ export const TaskRowTitle = styled(Title)`
 
   &[data-status='completed'] {
     color: var(--text-tertiary);
+  }
+
+  &::after {
+    content: attr(data-placeholder);
+    color: var(--text-tertiary);
+    font-weight: 300;
+  }
+
+  &:focus::after {
+    display: none;
   }
 `;
