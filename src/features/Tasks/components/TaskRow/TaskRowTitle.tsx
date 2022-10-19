@@ -51,6 +51,7 @@ const Title: FunctionComponent<Props> = ({
 
       case 'Enter':
         event.preventDefault();
+        event.stopPropagation();
         refEl.current?.blur();
         break;
 
