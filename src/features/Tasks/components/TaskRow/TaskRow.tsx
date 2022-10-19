@@ -61,6 +61,15 @@ export const TaskRow: FunctionComponent<Props> = memo(
       (event) => {
         if (isFocused && isWriting(event.key)) {
           setTitleFocused(true);
+          return;
+        }
+
+        switch (event.key) {
+          case 'Backspace':
+            if (!event.metaKey && !event.ctrlKey) {
+              setTitleFocused(true);
+              return;
+            }
         }
 
         onKeyDown?.(task, event);
