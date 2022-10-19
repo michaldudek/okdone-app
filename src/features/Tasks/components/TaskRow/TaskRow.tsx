@@ -81,7 +81,12 @@ export const TaskRow: FunctionComponent<Props> = memo(
       [onChange, task],
     );
 
-    const handleTitleBlur = () => setTitleFocused(false);
+    const handleTitleBlur = () => {
+      setTitleFocused(false);
+      if (isFocused && ref.current) {
+        ref.current.focus();
+      }
+    };
 
     const handleBlur = useCallback(() => onBlur?.(task), [onBlur, task]);
     const handleFocus = useCallback(() => onFocus?.(task), [onFocus, task]);
