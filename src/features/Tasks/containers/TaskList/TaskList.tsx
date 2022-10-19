@@ -70,6 +70,16 @@ export const TaskList: FunctionComponent = () => {
     [addTask, deleteTask, setFocus, setTaskCompleted, tasks, toggleOpenTask],
   );
 
+  const handleFocus = useCallback(
+    (task: Task) => {
+      onFocusTask(task);
+      if (openTaskId !== task.id) {
+        toggleOpenTask(task, false);
+      }
+    },
+    [onFocusTask, openTaskId, toggleOpenTask],
+  );
+
   const handleDoubleClick = useCallback(
     (task: Task, event: MouseEvent) => {
       toggleOpenTask(task, true);
@@ -98,7 +108,7 @@ export const TaskList: FunctionComponent = () => {
               isOpen={openTaskId === task.id}
               isFocused={focusedTaskId === task.id}
               onBlur={onBlurTask}
-              onFocus={onFocusTask}
+              onFocus={handleFocus}
               onChange={handleChange}
               onCompleted={setTaskCompleted}
               onDoubleClick={handleDoubleClick}
