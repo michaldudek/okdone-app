@@ -71,6 +71,7 @@ export const TaskRow: FunctionComponent<Props> = memo(
     const handleDoubleClick = useCallback<MouseEventHandler>(
       (event) => {
         event.preventDefault();
+        setTitleFocused(true);
         onDoubleClick?.(task, event);
       },
       [onDoubleClick, task],
