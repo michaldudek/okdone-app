@@ -43,7 +43,14 @@ export const TaskList: FunctionComponent = () => {
           setFocus(newTask.id);
         },
         Escape: () => toggleOpenTask(task, false),
-        Backspace: () => deleteTask(task.id),
+        Backspace: async () => {
+          const nextFocusTask =
+            findTaskBefore(tasks, task) || findTaskAfter(tasks, task);
+          if (nextFocusTask) {
+            setFocus(nextFocusTask.id);
+          }
+          deleteTask(task.id);
+        },
         ArrowUp: () => {
           const prevTask = findTaskBefore(tasks, task);
           if (prevTask) {

@@ -5,7 +5,7 @@ export const findTaskBefore = (
   current: Task,
 ): Task | undefined => {
   const currIndex = tasks.findIndex(({ id }) => id === current.id);
-  if (currIndex === -1) {
+  if (currIndex <= 0) {
     return;
   }
 
@@ -17,7 +17,7 @@ export const findTaskAfter = (
   current: Task,
 ): Task | undefined => {
   const currIndex = tasks.findIndex(({ id }) => id === current.id);
-  if (currIndex <= 0) {
+  if (currIndex === -1) {
     return;
   }
 
