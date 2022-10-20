@@ -17,6 +17,7 @@ import { TaskRowCheckbox } from './TaskRowCheckbox';
 import { TaskRowContainer } from './TaskRowContainer';
 import { TaskRowFooter } from './TaskRowFooter';
 import { TaskRowHeader } from './TaskRowHeader';
+import { TaskRowNotes } from './TaskRowNotes';
 import { TaskRowTitle } from './TaskRowTitle';
 
 const isWriting = (key: string) =>
@@ -49,8 +50,9 @@ export const TaskRow: FunctionComponent<Props> = memo(
     const ref = useRef<HTMLDivElement>(null);
     const [isTitleFocused, setTitleFocused] =
       useState<ComponentProps<typeof TaskRowTitle>['isFocused']>(false);
+    const [isNotesFocused, setNotesFocused] = useState(false);
 
-    const { title, completedDate } = task;
+    const { title, notes, completedDate } = task;
     const isCompleted = !!completedDate;
 
     useEffect(() => {
@@ -97,16 +99,36 @@ export const TaskRow: FunctionComponent<Props> = memo(
       [onDoubleClick, task],
     );
 
-    const handleChange = useCallback(
+    const handleTitleChange = useCallback(
       (title: string) => onChange?.(task, { title }),
       [onChange, task],
     );
 
+    const handleTitleFocus = () => {
+      setTitleFocused(true);
+    };
+
     const handleTitleBlur = () => {
       setTitleFocused(false);
-      if (isFocused && ref.current) {
-        ref.current.focus();
-      }
+      // if (isFocused && ref.current) {
+      //   ref.current.focus();
+      // }
+    };
+
+    const handleNotesChange = useCallback(
+      (notes: string) => onChange?.(task, { notes }),
+      [onChange, task],
+    );
+
+    const handleNotesFocus = () => {
+      setNotesFocused(true);
+    };
+
+    const handleNotesBlur = () => {
+      setNotesFocused(false);
+      // if (isFocused && ref.current) {
+      //   ref.current.focus();
+      // }
     };
 
     const handleBlur = useCallback(() => onBlur?.(task), [onBlur, task]);
@@ -134,12 +156,22 @@ export const TaskRow: FunctionComponent<Props> = memo(
           <TaskRowTitle
             isFocused={isTitleFocused}
             onBlur={handleTitleBlur}
-            onChange={handleChange}
+            onFocus={handleTitleFocus}
+            onChange={handleTitleChange}
             data-status={taskStatus(task)}
           >
             {title}
           </TaskRowTitle>
         </TaskRowHeader>
+        {isOpen && (
+          <TaskRowNotes
+            isFocused={isNotesFocused}
+            onBlur={handleNotesBlur}
+            onFocus={handleNotesFocus}
+            onChange={handleNotesChange}
+            value={notes}
+          />
+        )}
         {isOpen && <TaskRowFooter task={task} />}
       </TaskRowContainer>
     );

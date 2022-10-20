@@ -7,6 +7,7 @@ export const TASK_RESOURCE_NAME = 'tasks';
 export type Task = Resource & {
   title: string;
   order: number;
+  notes?: string | null;
   completedAt: Date | null;
   completedDate: DateString | null;
 };

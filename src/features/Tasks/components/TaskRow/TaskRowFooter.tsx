@@ -12,7 +12,6 @@ const Footer = styled.div`
   align-items: center;
   justify-content: space-between;
   height: var(--24px);
-  margin-top: var(--16px);
   color: var(--text-tertiary);
   font-size: var(--12px);
 `;
