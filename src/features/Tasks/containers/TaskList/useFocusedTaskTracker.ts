@@ -2,15 +2,15 @@ import { useCallback, useState } from 'react';
 import { ResourceId } from 'services/Storage';
 import { Task } from '../../types';
 
-export type SetFocusFn = (taskId: ResourceId) => void;
-export type ClearFocusFn = () => void;
+export type SetFocusedTaskFn = (taskId: ResourceId) => void;
+export type ClearFocusedTaskFn = () => void;
 export type OnBlurTaskFn = (task: Task) => void;
 export type OnFocusTaskFn = (task: Task) => void;
 
 export type UseFocusedTaskTrackerReturn = {
   focusedTaskId: ResourceId | undefined;
-  setFocus: SetFocusFn;
-  clearFocus: ClearFocusFn;
+  setFocusedTask: SetFocusedTaskFn;
+  clearFocusedTask: ClearFocusedTaskFn;
   onBlurTask: OnBlurTaskFn;
   onFocusTask: OnFocusTaskFn;
 };
@@ -18,26 +18,27 @@ export type UseFocusedTaskTrackerReturn = {
 export const useFocusedTaskTracker = (): UseFocusedTaskTrackerReturn => {
   const [focusedTaskId, setFocusedTaskId] = useState<ResourceId>();
 
-  const setFocus = useCallback<SetFocusFn>((taskId) => {
+  const setFocusedTask = useCallback<SetFocusedTaskFn>((taskId) => {
     setFocusedTaskId(taskId);
   }, []);
 
-  const clearFocus = useCallback<ClearFocusFn>(() => {
+  const clearFocusedTask = useCallback<ClearFocusedTaskFn>(() => {
     setFocusedTaskId(undefined);
   }, []);
 
   const onBlurTask = useCallback<OnBlurTaskFn>((task) => {
     setFocusedTaskId((prev) => (prev === task.id ? undefined : prev));
   }, []);
+
   const onFocusTask = useCallback<OnFocusTaskFn>(
-    (task) => setFocus(task.id),
-    [setFocus],
+    (task) => setFocusedTask(task.id),
+    [setFocusedTask],
   );
 
   return {
     focusedTaskId,
-    setFocus,
-    clearFocus,
+    setFocusedTask,
+    clearFocusedTask,
     onBlurTask,
     onFocusTask,
   };

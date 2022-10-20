@@ -24,7 +24,7 @@ export const TaskList: FunctionComponent = () => {
     useTasks();
 
   const [openTaskId, toggleOpenTask] = useOpenTaskTracker(listRef);
-  const { focusedTaskId, setFocus, onBlurTask, onFocusTask } =
+  const { focusedTaskId, setFocusedTask, onBlurTask, onFocusTask } =
     useFocusedTaskTracker();
 
   useEffect(() => {
@@ -35,7 +35,7 @@ export const TaskList: FunctionComponent = () => {
           title: '',
           taskBefore: findLastTask(tasks),
         });
-        setFocus(newTask.id);
+        setFocusedTask(newTask.id);
       }
     };
 
@@ -43,7 +43,7 @@ export const TaskList: FunctionComponent = () => {
     return () => {
       window.removeEventListener('keydown', handleAddNewTask);
     };
-  }, [addTask, setFocus, tasks]);
+  }, [addTask, setFocusedTask, tasks]);
 
   const handleKeyDown = useCallback(
     (task: Task, event: ReactKeyboardEvent) => {
@@ -62,7 +62,7 @@ export const TaskList: FunctionComponent = () => {
             taskBefore: task,
             taskAfter: taskAfter,
           });
-          setFocus(newTask.id);
+          setFocusedTask(newTask.id);
         },
         Escape: () => toggleOpenTask(task, false),
         Backspace: async () => {
@@ -70,7 +70,7 @@ export const TaskList: FunctionComponent = () => {
             const nextFocusTask =
               findTaskBefore(tasks, task) || findTaskAfter(tasks, task);
             if (nextFocusTask) {
-              setFocus(nextFocusTask.id);
+              setFocusedTask(nextFocusTask.id);
             }
             deleteTask(task.id);
           }
@@ -78,20 +78,27 @@ export const TaskList: FunctionComponent = () => {
         ArrowUp: () => {
           const prevTask = findTaskBefore(tasks, task);
           if (prevTask) {
-            setFocus(prevTask.id);
+            setFocusedTask(prevTask.id);
           }
         },
         ArrowDown: () => {
           const nextTask = findTaskAfter(tasks, task);
           if (nextTask) {
-            setFocus(nextTask.id);
+            setFocusedTask(nextTask.id);
           }
         },
       };
 
       actions[event.key]?.();
     },
-    [addTask, deleteTask, setFocus, setTaskCompleted, tasks, toggleOpenTask],
+    [
+      addTask,
+      deleteTask,
+      setFocusedTask,
+      setTaskCompleted,
+      tasks,
+      toggleOpenTask,
+    ],
   );
 
   const handleFocus = useCallback(
