@@ -13,7 +13,8 @@ export const TaskRowContainer = styled.div`
   transition: all var(--transition-regular) var(--ease-regular),
     background-color 0s;
 
-  &:focus {
+  &:focus,
+  &[data-focused='true'] {
     background-color: var(--highlight-background);
   }
 

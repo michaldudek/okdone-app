@@ -146,6 +146,7 @@ export const TaskRow: FunctionComponent<Props> = memo(
         onFocus={handleFocus}
         onKeyDown={handleKeyDown}
         aria-expanded={isOpen}
+        data-focused={isFocused}
         data-status={taskStatus(task)}
       >
         <TaskRowHeader>
