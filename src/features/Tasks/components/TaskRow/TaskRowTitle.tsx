@@ -13,13 +13,34 @@ type Props = {
   children: string;
   isFocused?: boolean | 'start' | 'end';
   onBlur?: () => void;
+  onFocus?: () => void;
   onChange?: (text: string) => void;
 };
 
-const Title: FunctionComponent<Props> = ({
+const StyledTitle = styled.div`
+  flex: 1;
+  outline: none;
+
+  &[data-status='completed'] {
+    color: var(--text-tertiary);
+  }
+
+  &::after {
+    content: attr(data-placeholder);
+    color: var(--text-tertiary);
+    font-weight: 300;
+  }
+
+  &:focus::after {
+    display: none;
+  }
+`;
+
+export const TaskRowTitle: FunctionComponent<Props> = ({
   children,
   isFocused = false,
   onBlur,
+  onFocus,
   onChange,
   ...otherProps
 }) => {
@@ -47,6 +68,10 @@ const Title: FunctionComponent<Props> = ({
     onBlur?.();
   };
 
+  const handleFocus: FocusEventHandler = (event) => {
+    onFocus?.();
+  };
+
   const handleKeyDown: KeyboardEventHandler<HTMLElement> = (event) => {
     if (refEl.current) {
       setHasContent(!!refEl.current.textContent);
@@ -72,37 +97,19 @@ const Title: FunctionComponent<Props> = ({
   };
 
   return (
-    <div
+    <StyledTitle
       ref={refEl}
       contentEditable
       suppressContentEditableWarning
       role="textbox"
       onKeyDown={handleKeyDown}
       onBlur={handleBlur}
+      onFocus={handleFocus}
       tabIndex={-1}
       data-placeholder={!hasContent ? 'What do you want to do?' : undefined}
       {...otherProps}
     >
       {children}
-    </div>
+    </StyledTitle>
   );
 };
-
-export const TaskRowTitle = styled(Title)`
-  flex: 1;
-  outline: none;
-
-  &[data-status='completed'] {
-    color: var(--text-tertiary);
-  }
-
-  &::after {
-    content: attr(data-placeholder);
-    color: var(--text-tertiary);
-    font-weight: 300;
-  }
-
-  &:focus::after {
-    display: none;
-  }
-`;
