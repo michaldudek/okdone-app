@@ -1,14 +1,14 @@
 import styled from '@emotion/styled';
 import {
-  ComponentProps,
+  ComponentPropsWithoutRef,
   FormEventHandler,
   forwardRef,
-  ForwardRefRenderFunction,
+  FunctionComponent,
   useCallback,
   useRef,
 } from 'react';
 
-type Props = ComponentProps<'textarea'>;
+type Props = ComponentPropsWithoutRef<'textarea'>;
 
 const StyledWrap = styled.div`
   display: grid;
@@ -37,10 +37,10 @@ const StyledWrap = styled.div`
   }
 `;
 
-const TextAreaBase: ForwardRefRenderFunction<HTMLTextAreaElement, Props> = (
-  { className, onInput, value, ...otherProps },
-  ref,
-) => {
+export const TextArea: FunctionComponent<Props> = forwardRef<
+  HTMLTextAreaElement,
+  Props
+>(({ className, onInput, value, ...otherProps }, ref) => {
   const wrapRef = useRef<HTMLDivElement>(null);
 
   const handleInput = useCallback<FormEventHandler<HTMLTextAreaElement>>(
@@ -63,6 +63,4 @@ const TextAreaBase: ForwardRefRenderFunction<HTMLTextAreaElement, Props> = (
       />
     </StyledWrap>
   );
-};
-
-export const TextArea = forwardRef(TextAreaBase);
+});
