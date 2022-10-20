@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
+import { IconContext } from 'phosphor-react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import reportWebVitals from 'services/reportWebVitals';
@@ -18,7 +19,11 @@ root.render(
   <React.StrictMode>
     <GlobalStyles />
     <QueryClientProvider client={reactQueryClient}>
-      <App />
+      <IconContext.Provider
+        value={{ color: 'var(--text-tertiary)', weight: 'thin' }}
+      >
+        <App />
+      </IconContext.Provider>
     </QueryClientProvider>
   </React.StrictMode>,
 );

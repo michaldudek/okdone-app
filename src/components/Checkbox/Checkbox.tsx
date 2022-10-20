@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
-import CheckIcon from '@heroicons/react/20/solid/CheckIcon';
 import * as RadixCheckbox from '@radix-ui/react-checkbox';
+import { Check } from 'phosphor-react';
 import { FunctionComponent } from 'react';
 
 const StyledCheckbox = styled(RadixCheckbox.Root)`
@@ -37,7 +37,7 @@ export const Checkbox: FunctionComponent<RadixCheckbox.CheckboxProps> = (
 ) => (
   <StyledCheckbox {...props}>
     <StyledIndicator>
-      <CheckIcon width={10} height={10} />
+      <Check size={12} color="white" weight="regular" />
     </StyledIndicator>
   </StyledCheckbox>
 );
