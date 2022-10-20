@@ -113,7 +113,7 @@ export const TaskRow: FunctionComponent<Props> = memo(
     const handleTitleKeyDown = useCallback<KeyboardEventHandler>(
       (event) => {
         // ENTER when task is open switches focus to Notes
-        if (isOpen && event.key === 'Enter') {
+        if (isOpen && event.key === 'Enter' && !event.shiftKey) {
           event.stopPropagation();
           event.preventDefault();
           notesRef.current?.focus();

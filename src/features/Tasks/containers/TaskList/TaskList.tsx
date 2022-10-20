@@ -72,7 +72,8 @@ export const TaskList: FunctionComponent = () => {
   }, [addTask, focusedTaskId, setFocusedTask, tasks]);
 
   const handleKeyDown = useCallback(
-    (task: Task, { key, shiftKey }: ReactKeyboardEvent) => {
+    (task: Task, event: ReactKeyboardEvent) => {
+      const { key, shiftKey } = event;
       const actions: Record<string, () => void> = {
         // SPACE toggles the task complete
         ' ': () => setTaskCompleted(task, !task.completedAt),
@@ -105,14 +106,25 @@ export const TaskList: FunctionComponent = () => {
           clearFocusedTask();
         },
         // SHIFT+BACKSPACE deletes the task only if it isn't open
+        // BACKSPACE deletes the task if it isn't open and is empty
         Backspace: async () => {
-          if (shiftKey && openTaskId !== task.id) {
-            const nextFocusTask =
-              findTaskBefore(tasks, task) || findTaskAfter(tasks, task);
-            if (nextFocusTask) {
-              setFocusedTask(nextFocusTask.id);
+          if (openTaskId !== task.id) {
+            if (shiftKey || (!task.title && !task.notes)) {
+              event.preventDefault();
+              const nextFocusTask =
+                findTaskBefore(tasks, task) || findTaskAfter(tasks, task);
+              if (nextFocusTask) {
+                setFocusedTask(nextFocusTask.id);
+              }
+              deleteTask(task.id);
+              return;
             }
-            deleteTask(task.id);
+
+            // when trying to delete from empty title, but there are some notes
+            // open the task to show this to the user
+            if (!shiftKey && !task.title && task.notes) {
+              toggleOpenTask(task, true);
+            }
           }
         },
         // ARROW UP navigates the list up
