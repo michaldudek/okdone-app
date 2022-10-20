@@ -1,7 +1,7 @@
-import { calculateOrder } from 'features/Tasks/utils/order';
 import { In, Repository } from 'services/Storage';
 import { todayToDateString } from 'types/DateString';
 import { Task } from './types';
+import { calculateOrder } from './utils/order';
 
 export type CreateOptions = {
   taskBefore?: Task;

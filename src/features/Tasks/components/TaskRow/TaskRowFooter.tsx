@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { TimeRelative } from 'components/TimeRelative';
-import { Task } from 'features/Tasks/types';
 import { FunctionComponent } from 'react';
+import { Task } from '../../types';
 
 type Props = {
   task: Task;
