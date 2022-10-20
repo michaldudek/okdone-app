@@ -5,47 +5,38 @@ import {
   KeyboardEventHandler,
   useEffect,
   useRef,
-  useState,
 } from 'react';
 import { setCaretAtEnd, setCaretAtStart } from 'utils/caret';
 
 type Props = {
-  children: string;
   isFocused?: boolean | 'start' | 'end';
   onBlur?: () => void;
   onFocus?: () => void;
   onChange?: (text: string) => void;
+  value: string;
 };
 
-const StyledTitle = styled.div`
+const StyledInput = styled.input`
   flex: 1;
+  font: inherit;
+  border: none;
   outline: none;
+  background: transparent;
 
   &[data-status='completed'] {
     color: var(--text-tertiary);
   }
-
-  &::after {
-    content: attr(data-placeholder);
-    color: var(--text-tertiary);
-    font-weight: 300;
-  }
-
-  &:focus::after {
-    display: none;
-  }
 `;
 
 export const TaskRowTitle: FunctionComponent<Props> = ({
-  children,
   isFocused = false,
   onBlur,
   onFocus,
   onChange,
-  ...otherProps
+  value,
+  ...props
 }) => {
-  const refEl = useRef<HTMLDivElement>(null);
-  const [hasContent, setHasContent] = useState(children.length > 0);
+  const refEl = useRef<HTMLInputElement>(null);
 
   // if focus requested then set text caret at the end of the title
   // (unless it already has focus)
@@ -63,20 +54,16 @@ export const TaskRowTitle: FunctionComponent<Props> = ({
     }
   }, [isFocused]);
 
-  const handleBlur: FocusEventHandler = (event) => {
-    onChange?.(event.target.textContent ?? '');
+  const handleBlur: FocusEventHandler<HTMLInputElement> = (event) => {
+    onChange?.(event.target.value ?? '');
     onBlur?.();
   };
 
-  const handleFocus: FocusEventHandler = (event) => {
+  const handleFocus: FocusEventHandler<HTMLInputElement> = (event) => {
     onFocus?.();
   };
 
-  const handleKeyDown: KeyboardEventHandler<HTMLElement> = (event) => {
-    if (refEl.current) {
-      setHasContent(!!refEl.current.textContent);
-    }
-
+  const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (event) => {
     switch (event.key) {
       case ' ':
       case 'Space':
@@ -97,19 +84,15 @@ export const TaskRowTitle: FunctionComponent<Props> = ({
   };
 
   return (
-    <StyledTitle
+    <StyledInput
       ref={refEl}
-      contentEditable
-      suppressContentEditableWarning
-      role="textbox"
       onKeyDown={handleKeyDown}
       onBlur={handleBlur}
       onFocus={handleFocus}
       tabIndex={-1}
-      data-placeholder={!hasContent ? 'What do you want to do?' : undefined}
-      {...otherProps}
-    >
-      {children}
-    </StyledTitle>
+      placeholder="What do you want to do?"
+      defaultValue={value}
+      {...props}
+    />
   );
 };

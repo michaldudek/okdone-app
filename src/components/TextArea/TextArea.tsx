@@ -23,11 +23,12 @@ const StyledWrap = styled.div`
     outline: none;
     resize: none;
     overflow: hidden;
+    border: none;
+    background: transparent;
   }
 
   & > textarea,
   &::after {
-    border: none;
     padding-top: var(--16px);
     padding-bottom: var(--16px);
     font: inherit;

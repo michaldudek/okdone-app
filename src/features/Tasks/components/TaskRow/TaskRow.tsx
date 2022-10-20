@@ -160,9 +160,8 @@ export const TaskRow: FunctionComponent<Props> = memo(
             onFocus={handleTitleFocus}
             onChange={handleTitleChange}
             data-status={taskStatus(task)}
-          >
-            {title}
-          </TaskRowTitle>
+            value={title}
+          />
         </TaskRowHeader>
         {isOpen && (
           <TaskRowNotes
