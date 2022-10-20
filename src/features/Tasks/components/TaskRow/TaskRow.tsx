@@ -137,6 +137,7 @@ export const TaskRow: FunctionComponent<Props> = memo(
 
     return (
       <TaskRowContainer
+        // TODO needs some aria role
         ref={ref}
         tabIndex={0}
         onBlur={handleBlur}
