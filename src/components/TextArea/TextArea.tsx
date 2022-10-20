@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import {
   ComponentProps,
   FormEventHandler,
@@ -6,9 +7,34 @@ import {
   useCallback,
   useRef,
 } from 'react';
-import styles from './TextArea.module.scss';
 
 type Props = ComponentProps<'textarea'>;
+
+const StyledWrap = styled.div`
+  display: grid;
+
+  &::after {
+    content: attr(data-val) ' ';
+    white-space: pre-wrap;
+    visibility: hidden;
+  }
+
+  & > textarea {
+    outline: none;
+    resize: none;
+    overflow: hidden;
+  }
+
+  & > textarea,
+  &::after {
+    border: none;
+    padding-top: var(--16px);
+    padding-bottom: var(--16px);
+    font: inherit;
+    line-height: 1.3;
+    grid-area: 1 / 1 / 2 / 2;
+  }
+`;
 
 const TextAreaBase: ForwardRefRenderFunction<HTMLTextAreaElement, Props> = (
   { className, onInput, value, ...otherProps },
@@ -27,16 +53,14 @@ const TextAreaBase: ForwardRefRenderFunction<HTMLTextAreaElement, Props> = (
   );
 
   return (
-    <div className={className}>
-      <div ref={wrapRef} data-val={value} className={styles.wrap}>
-        <textarea
-          ref={ref}
-          defaultValue={value}
-          {...otherProps}
-          onInput={handleInput}
-        />
-      </div>
-    </div>
+    <StyledWrap ref={wrapRef} data-val={value} className={className}>
+      <textarea
+        ref={ref}
+        defaultValue={value}
+        {...otherProps}
+        onInput={handleInput}
+      />
+    </StyledWrap>
   );
 };
 
