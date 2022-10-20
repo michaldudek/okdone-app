@@ -1,9 +1,3 @@
-import { Task } from 'features/Tasks/types';
-import {
-  findLastTask,
-  findTaskAfter,
-  findTaskBefore,
-} from 'features/Tasks/utils/find';
 import {
   FunctionComponent,
   KeyboardEvent as ReactKeyboardEvent,
@@ -14,6 +8,13 @@ import {
 } from 'react';
 import { TaskRow } from '../../components/TaskRow';
 import { useTasks } from '../../hooks/useTasks';
+import { Task } from '../../types';
+import {
+  findFirstTask,
+  findLastTask,
+  findTaskAfter,
+  findTaskBefore,
+} from '../../utils/find';
 import { useFocusedTaskTracker } from './useFocusedTaskTracker';
 import { useOpenTaskTracker } from './useOpenTaskTracker';
 
@@ -24,11 +25,17 @@ export const TaskList: FunctionComponent = () => {
     useTasks();
 
   const [openTaskId, toggleOpenTask] = useOpenTaskTracker(listRef);
-  const { focusedTaskId, setFocusedTask, onBlurTask, onFocusTask } =
-    useFocusedTaskTracker();
+  const {
+    focusedTaskId,
+    setFocusedTask,
+    clearFocusedTask,
+    onBlurTask,
+    onFocusTask,
+  } = useFocusedTaskTracker();
 
   useEffect(() => {
-    const handleAddNewTask = async (event: KeyboardEvent) => {
+    const handleKeyDown = async (event: KeyboardEvent) => {
+      // CTRL+N creates a new task at the end of the list
       if (event.key.toLowerCase() === 'n' && event.ctrlKey) {
         event.preventDefault();
         const newTask = await addTask({
@@ -36,22 +43,44 @@ export const TaskList: FunctionComponent = () => {
           taskBefore: findLastTask(tasks),
         });
         setFocusedTask(newTask.id);
+        return;
+      }
+
+      // ARROW UP and DOWN start navigating the list if no task is focused
+      if (!focusedTaskId) {
+        if (event.key === 'ArrowUp') {
+          const lastTask = findLastTask(tasks);
+          if (lastTask) {
+            setFocusedTask(lastTask.id);
+          }
+          return;
+        }
+
+        if (event.key === 'ArrowDown') {
+          const firstTask = findFirstTask(tasks);
+          if (firstTask) {
+            setFocusedTask(firstTask.id);
+          }
+        }
       }
     };
 
-    window.addEventListener('keydown', handleAddNewTask);
+    window.addEventListener('keydown', handleKeyDown);
     return () => {
-      window.removeEventListener('keydown', handleAddNewTask);
+      window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [addTask, setFocusedTask, tasks]);
+  }, [addTask, focusedTaskId, setFocusedTask, tasks]);
 
   const handleKeyDown = useCallback(
-    (task: Task, event: ReactKeyboardEvent) => {
+    (task: Task, { key, shiftKey }: ReactKeyboardEvent) => {
       const actions: Record<string, () => void> = {
+        // SPACE toggles the task complete
         ' ': () => setTaskCompleted(task, !task.completedAt),
         Space: () => setTaskCompleted(task, !task.completedAt),
+        // SHIFT+ENTER toggles the open state
+        // ENTER adds a new task after the focused task
         Enter: async () => {
-          if (event.shiftKey) {
+          if (shiftKey) {
             toggleOpenTask(task);
             return;
           }
@@ -64,9 +93,20 @@ export const TaskList: FunctionComponent = () => {
           });
           setFocusedTask(newTask.id);
         },
-        Escape: () => toggleOpenTask(task, false),
+        // ESCAPE closes the task and sets focus on it
+        // ESCAPE clears focus if no task is open
+        Escape: () => {
+          if (openTaskId) {
+            toggleOpenTask(task, false);
+            setFocusedTask(openTaskId);
+            return;
+          }
+
+          clearFocusedTask();
+        },
+        // SHIFT+BACKSPACE deletes the task only if it isn't open
         Backspace: async () => {
-          if (event.metaKey || event.ctrlKey) {
+          if (shiftKey && openTaskId !== task.id) {
             const nextFocusTask =
               findTaskBefore(tasks, task) || findTaskAfter(tasks, task);
             if (nextFocusTask) {
@@ -75,12 +115,14 @@ export const TaskList: FunctionComponent = () => {
             deleteTask(task.id);
           }
         },
+        // ARROW UP navigates the list up
         ArrowUp: () => {
           const prevTask = findTaskBefore(tasks, task);
           if (prevTask) {
             setFocusedTask(prevTask.id);
           }
         },
+        // ARROW DOWN navigates the list down
         ArrowDown: () => {
           const nextTask = findTaskAfter(tasks, task);
           if (nextTask) {
@@ -89,11 +131,13 @@ export const TaskList: FunctionComponent = () => {
         },
       };
 
-      actions[event.key]?.();
+      actions[key]?.();
     },
     [
       addTask,
+      clearFocusedTask,
       deleteTask,
+      openTaskId,
       setFocusedTask,
       setTaskCompleted,
       tasks,
@@ -104,6 +148,7 @@ export const TaskList: FunctionComponent = () => {
   const handleFocus = useCallback(
     (task: Task) => {
       onFocusTask(task);
+      // close any other task
       if (openTaskId !== task.id) {
         toggleOpenTask(task, false);
       }
@@ -120,6 +165,7 @@ export const TaskList: FunctionComponent = () => {
 
   const handleChange = useCallback(
     (task: Task, change: Partial<Task>) => {
+      // TODO debounce this call
       updateTask({
         id: task.id,
         ...change,

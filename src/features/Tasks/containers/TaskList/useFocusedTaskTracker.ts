@@ -8,7 +8,7 @@ export type OnBlurTaskFn = (task: Task) => void;
 export type OnFocusTaskFn = (task: Task) => void;
 
 export type UseFocusedTaskTrackerReturn = {
-  focusedTaskId: ResourceId | undefined;
+  focusedTaskId: ResourceId | null;
   setFocusedTask: SetFocusedTaskFn;
   clearFocusedTask: ClearFocusedTaskFn;
   onBlurTask: OnBlurTaskFn;
@@ -16,18 +16,18 @@ export type UseFocusedTaskTrackerReturn = {
 };
 
 export const useFocusedTaskTracker = (): UseFocusedTaskTrackerReturn => {
-  const [focusedTaskId, setFocusedTaskId] = useState<ResourceId>();
+  const [focusedTaskId, setFocusedTaskId] = useState<ResourceId | null>(null);
 
   const setFocusedTask = useCallback<SetFocusedTaskFn>((taskId) => {
     setFocusedTaskId(taskId);
   }, []);
 
   const clearFocusedTask = useCallback<ClearFocusedTaskFn>(() => {
-    setFocusedTaskId(undefined);
+    setFocusedTaskId(null);
   }, []);
 
   const onBlurTask = useCallback<OnBlurTaskFn>((task) => {
-    setFocusedTaskId((prev) => (prev === task.id ? undefined : prev));
+    setFocusedTaskId((prev) => (prev === task.id ? null : prev));
   }, []);
 
   const onFocusTask = useCallback<OnFocusTaskFn>(

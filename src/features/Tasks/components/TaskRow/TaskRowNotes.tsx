@@ -1,77 +1,47 @@
 import { TextArea } from 'components/TextArea';
 import {
-  FocusEventHandler,
-  FunctionComponent,
+  ComponentProps,
+  forwardRef,
   KeyboardEventHandler,
-  MouseEventHandler,
-  useEffect,
-  useRef,
+  useCallback,
 } from 'react';
-import { setCaretAtEnd } from 'utils/caret';
+import { useForwardedRef } from 'utils/useForwardedRef';
 
-type Props = {
+type Props = Omit<ComponentProps<'textarea'>, 'value'> & {
   value: string | null | undefined;
-  isFocused?: boolean;
-  onBlur?: () => void;
-  onFocus?: () => void;
-  onChange?: (text: string) => void;
 };
 
-export const TaskRowNotes: FunctionComponent<Props> = ({
-  value = '',
-  isFocused,
-  onBlur,
-  onFocus,
-  onChange,
-}) => {
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+export const TaskRowNotes = forwardRef<HTMLTextAreaElement, Props>(
+  ({ value = '', ...props }, forwardedRef) => {
+    const ref = useForwardedRef(forwardedRef);
 
-  useEffect(() => {
-    if (
-      isFocused &&
-      textAreaRef.current &&
-      textAreaRef.current !== document.activeElement
-    ) {
-      setCaretAtEnd(textAreaRef.current);
-    }
-  }, [isFocused]);
+    // TODO this renders on every keystroke, debug! (onChange???)
+    // console.log('render TaskRowNotes');
 
-  const handleBlur: FocusEventHandler<HTMLTextAreaElement> = (event) => {
-    onChange?.(event.target.value);
-    onBlur?.();
-  };
+    // stop propagation of most keys, so we can write freely
+    const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> =
+      useCallback((event) => {
+        // ESCAPE closes the task and sets focus on it
+        // SHIFT+ENTER toggles the open state
+        if (
+          event.key === 'Escape' ||
+          (event.key === 'Enter' && event.shiftKey)
+        ) {
+          event.preventDefault();
+          return;
+        }
 
-  const handleFocus: FocusEventHandler = (event) => {
-    onFocus?.();
-  };
+        event.stopPropagation();
+      }, []);
 
-  const handleClick: MouseEventHandler = (event) => {
-    onFocus?.();
-  };
-
-  const handleKeyDown: KeyboardEventHandler<HTMLElement> = (event) => {
-    // TODO figure these out properly
-
-    if (event.key === 'Escape') {
-      textAreaRef.current?.blur();
-      return;
-    }
-
-    if (!event.ctrlKey && !event.metaKey) {
-      event.stopPropagation();
-      return;
-    }
-  };
-
-  return (
-    <TextArea
-      ref={textAreaRef}
-      value={value ?? ''}
-      onBlur={handleBlur}
-      onFocus={handleFocus}
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      placeholder="Notes"
-    />
-  );
-};
+    return (
+      <TextArea
+        ref={ref}
+        value={value ?? ''}
+        onKeyDown={handleKeyDown}
+        placeholder="Notes"
+        {...props}
+      />
+    );
+  },
+);

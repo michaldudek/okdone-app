@@ -1,5 +1,6 @@
 import {
-  ComponentProps,
+  ChangeEventHandler,
+  FocusEventHandler,
   FunctionComponent,
   KeyboardEvent,
   KeyboardEventHandler,
@@ -9,7 +10,6 @@ import {
   useCallback,
   useEffect,
   useRef,
-  useState,
 } from 'react';
 import { Task } from '../../types';
 import { taskStatus } from '../../utils/taskStatus';
@@ -19,9 +19,6 @@ import { TaskRowFooter } from './TaskRowFooter';
 import { TaskRowHeader } from './TaskRowHeader';
 import { TaskRowNotes } from './TaskRowNotes';
 import { TaskRowTitle } from './TaskRowTitle';
-
-const isWriting = (key: string) =>
-  /^[\w_£§!@#$%^&*()_=+{}[\];:'"|\\~`,./<>?-]{1}$/.test(key);
 
 type Props = {
   task: Task;
@@ -47,103 +44,107 @@ export const TaskRow: FunctionComponent<Props> = memo(
     onKeyDown,
     task,
   }) => {
-    const ref = useRef<HTMLDivElement>(null);
-    const [isTitleFocused, setTitleFocused] =
-      useState<ComponentProps<typeof TaskRowTitle>['isFocused']>(false);
-    const [isNotesFocused, setNotesFocused] = useState(false);
-
     const { title, notes, completedDate } = task;
     const isCompleted = !!completedDate;
 
+    const ref = useRef<HTMLDivElement>(null);
+    const titleRef = useRef<HTMLInputElement>(null);
+    const notesRef = useRef<HTMLTextAreaElement>(null);
+
+    /**
+     * Check if the document focus is somewhere within the TaskRow
+     */
+    const hasFocus = (): boolean =>
+      ref.current?.contains(document.activeElement) ?? false;
+
+    /* Manage focused state */
     useEffect(() => {
-      if (isFocused && ref.current) {
-        ref.current.focus();
+      if (isFocused && !hasFocus()) {
+        titleRef.current?.focus();
+        return;
+      }
+
+      if (isFocused && document.activeElement === ref.current) {
+        titleRef.current?.focus();
       }
     }, [isFocused]);
 
-    const handleKeyDown = useCallback<KeyboardEventHandler>(
-      (event) => {
-        if (isFocused && isWriting(event.key)) {
-          setTitleFocused('end');
-          return;
-        }
+    useEffect(() => {
+      if (!isOpen && isFocused && !hasFocus()) {
+        titleRef.current?.focus();
+      }
 
-        switch (event.key) {
-          case 'Backspace':
-            if (!event.metaKey && !event.ctrlKey) {
-              setTitleFocused('end');
-              return;
-            }
-            break;
+      if (!isOpen && !isFocused) {
+        ref.current?.blur();
+        titleRef.current?.blur();
+      }
+    }, [isFocused, isOpen]);
 
-          case 'ArrowRight':
-            setTitleFocused('end');
-            break;
-
-          case 'ArrowLeft':
-            setTitleFocused('start');
-            break;
-        }
-
-        onKeyDown?.(task, event);
-      },
-      [isFocused, onKeyDown, task],
+    const handleFocus = useCallback<FocusEventHandler>(
+      () => onFocus?.(task),
+      [onFocus, task],
+    );
+    const handleClick = useCallback<MouseEventHandler>(
+      () => onFocus?.(task),
+      [onFocus, task],
+    );
+    const handleBlur = useCallback<FocusEventHandler>(
+      () => onBlur?.(task),
+      [onBlur, task],
     );
 
+    /* Manage open state and default focus */
     const handleDoubleClick = useCallback<MouseEventHandler>(
       (event) => {
-        event.preventDefault();
-        setTitleFocused('end');
+        if (!isOpen) {
+          titleRef.current?.focus();
+        }
         onDoubleClick?.(task, event);
       },
-      [onDoubleClick, task],
+      [isOpen, onDoubleClick, task],
     );
 
-    const handleTitleChange = useCallback(
-      (title: string) => onChange?.(task, { title }),
+    /* Manage key shortcuts */
+    const handleKeyDown = useCallback<KeyboardEventHandler>(
+      (event) => onKeyDown?.(task, event),
+      [onKeyDown, task],
+    );
+
+    const handleTitleKeyDown = useCallback<KeyboardEventHandler>(
+      (event) => {
+        // ENTER when task is open switches focus to Notes
+        if (isOpen && event.key === 'Enter') {
+          event.stopPropagation();
+          event.preventDefault();
+          notesRef.current?.focus();
+          return;
+        }
+      },
+      [isOpen],
+    );
+
+    /* Manage content changes */
+    const handleTitleChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
+      (event) => onChange?.(task, { title: event.currentTarget.value }),
       [onChange, task],
     );
 
-    const handleTitleFocus = () => {
-      setTitleFocused(true);
-    };
-
-    const handleTitleBlur = () => {
-      setTitleFocused(false);
-      // if (isFocused && ref.current) {
-      //   ref.current.focus();
-      // }
-    };
-
-    const handleNotesChange = useCallback(
-      (notes: string) => onChange?.(task, { notes }),
+    const handleNotesChange = useCallback<
+      ChangeEventHandler<HTMLTextAreaElement>
+    >(
+      (event) => onChange?.(task, { notes: event.currentTarget.value }),
       [onChange, task],
     );
-
-    const handleNotesFocus = () => {
-      setNotesFocused(true);
-    };
-
-    const handleNotesBlur = () => {
-      setNotesFocused(false);
-      // if (isFocused && ref.current) {
-      //   ref.current.focus();
-      // }
-    };
-
-    const handleBlur = useCallback(() => onBlur?.(task), [onBlur, task]);
-    const handleFocus = useCallback(() => onFocus?.(task), [onFocus, task]);
-    const handleClick = handleFocus;
 
     return (
       <TaskRowContainer
         // TODO needs some aria role
         ref={ref}
         tabIndex={0}
-        onBlur={handleBlur}
-        onClick={handleClick}
-        onDoubleClick={handleDoubleClick}
         onFocus={handleFocus}
+        onClick={handleClick}
+        onBlur={handleBlur}
+        onDoubleClick={handleDoubleClick}
         onKeyDown={handleKeyDown}
         aria-expanded={isOpen}
         data-focused={isFocused}
@@ -156,19 +157,18 @@ export const TaskRow: FunctionComponent<Props> = memo(
             onCheckedChange={(checked) => onCompleted?.(task, Boolean(checked))}
           />
           <TaskRowTitle
-            isFocused={isTitleFocused}
-            onBlur={handleTitleBlur}
-            onFocus={handleTitleFocus}
+            ref={titleRef}
+            // TODO change to onInput
             onChange={handleTitleChange}
+            onKeyDown={handleTitleKeyDown}
             data-status={taskStatus(task)}
             value={title}
           />
         </TaskRowHeader>
         {isOpen && (
           <TaskRowNotes
-            isFocused={isNotesFocused}
-            onBlur={handleNotesBlur}
-            onFocus={handleNotesFocus}
+            ref={notesRef}
+            // TODO change to onInput
             onChange={handleNotesChange}
             value={notes}
           />
