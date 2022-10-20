@@ -15,9 +15,6 @@ export const TaskRowNotes = forwardRef<HTMLTextAreaElement, Props>(
   ({ value = '', ...props }, forwardedRef) => {
     const ref = useForwardedRef(forwardedRef);
 
-    // TODO this renders on every keystroke, debug! (onChange???)
-    // console.log('render TaskRowNotes');
-
     // stop propagation of most keys, so we can write freely
     const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> =
       useCallback((event) => {

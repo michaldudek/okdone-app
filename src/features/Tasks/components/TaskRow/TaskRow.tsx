@@ -158,7 +158,6 @@ export const TaskRow: FunctionComponent<Props> = memo(
           />
           <TaskRowTitle
             ref={titleRef}
-            // TODO change to onInput
             onChange={handleTitleChange}
             onKeyDown={handleTitleKeyDown}
             data-status={taskStatus(task)}
@@ -168,7 +167,6 @@ export const TaskRow: FunctionComponent<Props> = memo(
         {isOpen && (
           <TaskRowNotes
             ref={notesRef}
-            // TODO change to onInput
             onChange={handleNotesChange}
             value={notes}
           />

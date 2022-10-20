@@ -6,6 +6,7 @@ import {
   useEffect,
   useRef,
 } from 'react';
+import { useDebounce } from 'utils/useDebounce';
 import { TaskRow } from '../../components/TaskRow';
 import { useTasks } from '../../hooks/useTasks';
 import { Task } from '../../types';
@@ -23,6 +24,7 @@ export const TaskList: FunctionComponent = () => {
 
   const { tasks, addTask, setTaskCompleted, updateTask, deleteTask } =
     useTasks();
+  const updateTaskDebounce = useDebounce(updateTask, 1_000);
 
   const [openTaskId, toggleOpenTask] = useOpenTaskTracker(listRef);
   const {
@@ -177,13 +179,15 @@ export const TaskList: FunctionComponent = () => {
 
   const handleChange = useCallback(
     (task: Task, change: Partial<Task>) => {
-      // TODO debounce this call
-      updateTask({
+      // if content has been cleared to empty then update immediatelly
+      const isCleared = Object.values(change).some((val) => !val);
+      const updateFn = isCleared ? updateTask : updateTaskDebounce;
+      updateFn({
         id: task.id,
         ...change,
       });
     },
-    [updateTask],
+    [updateTask, updateTaskDebounce],
   );
 
   return (
