@@ -29,8 +29,7 @@ const StyledWrap = styled.div`
 
   & > textarea,
   &::after {
-    padding-top: var(--16px);
-    padding-bottom: var(--16px);
+    padding: var(--16px) 0;
     font: inherit;
     line-height: 1.3;
     grid-area: 1 / 1 / 2 / 2;

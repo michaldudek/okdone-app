@@ -1,30 +1,57 @@
 import styled from '@emotion/styled';
-import { ComponentProps, forwardRef } from 'react';
+import { TextArea } from 'components/TextArea';
+import {
+  ComponentProps,
+  forwardRef,
+  KeyboardEventHandler,
+  useCallback,
+} from 'react';
 
-type Props = ComponentProps<'input'>;
+type Props = ComponentProps<'textarea'>;
 
-const StyledInput = styled.input`
-  font: inherit;
-  border: none;
-  outline: none;
-  background: transparent;
-  padding-right: var(--8px);
+const StyledTextArea = styled(TextArea)`
+  &,
+  & > textarea,
+  &::after {
+    padding: 0;
+  }
 
-  &[data-status='completed'] {
-    color: var(--text-tertiary);
+  [data-status='completed'] {
+    &,
+    & > textarea,
+    &::after {
+      color: var(--text-tertiary);
+    }
   }
 `;
 
-export const TaskRowTitle = forwardRef<HTMLInputElement, Props>(
-  ({ value, ...props }, ref) => {
+export const TaskRowTitle = forwardRef<HTMLTextAreaElement, Props>(
+  ({ value, onKeyDown, ...props }, ref) => {
+    const handleKeyDown = useCallback<
+      KeyboardEventHandler<HTMLTextAreaElement>
+    >(
+      (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+        }
+
+        if (event.key === ' ' || event.key === 'Space') {
+          event.stopPropagation();
+        }
+
+        onKeyDown?.(event);
+      },
+      [onKeyDown],
+    );
+
     return (
-      <StyledInput
+      <StyledTextArea
         ref={ref}
-        // need to keep tabIndex=-1 and manage focus in another way
-        // because TABbing into input field auto selects all its content!
-        tabIndex={-1}
-        placeholder="What do you want to do?"
-        defaultValue={value}
+        value={value}
+        // set initial dimensions minimal
+        rows={1}
+        cols={1}
+        onKeyDown={handleKeyDown}
         {...props}
       />
     );

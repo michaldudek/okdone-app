@@ -49,7 +49,7 @@ export const TaskRow: FunctionComponent<Props> = memo(
     const isCompleted = !!completedDate;
 
     const ref = useRef<HTMLDivElement>(null);
-    const titleRef = useRef<HTMLInputElement>(null);
+    const titleRef = useRef<HTMLTextAreaElement>(null);
     const notesRef = useRef<HTMLTextAreaElement>(null);
 
     /**
@@ -125,7 +125,9 @@ export const TaskRow: FunctionComponent<Props> = memo(
     );
 
     /* Manage content changes */
-    const handleTitleChange = useCallback<ChangeEventHandler<HTMLInputElement>>(
+    const handleTitleChange = useCallback<
+      ChangeEventHandler<HTMLTextAreaElement>
+    >(
       (event) => onChange?.(task, { title: event.currentTarget.value }),
       [onChange, task],
     );
