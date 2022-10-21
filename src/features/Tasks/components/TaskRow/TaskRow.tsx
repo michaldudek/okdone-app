@@ -1,3 +1,4 @@
+import { Note } from 'phosphor-react';
 import {
   ChangeEventHandler,
   FocusEventHandler,
@@ -163,6 +164,7 @@ export const TaskRow: FunctionComponent<Props> = memo(
             data-status={taskStatus(task)}
             value={title}
           />
+          {!isOpen && task.notes?.length ? <Note size={16} /> : null}
         </TaskRowHeader>
         {isOpen && (
           <TaskRowNotes
