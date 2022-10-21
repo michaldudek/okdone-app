@@ -4,11 +4,11 @@ import { ComponentProps, forwardRef } from 'react';
 type Props = ComponentProps<'input'>;
 
 const StyledInput = styled.input`
-  flex: 1;
   font: inherit;
   border: none;
   outline: none;
   background: transparent;
+  padding-right: var(--8px);
 
   &[data-status='completed'] {
     color: var(--text-tertiary);
