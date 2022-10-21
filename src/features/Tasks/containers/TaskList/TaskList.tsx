@@ -24,7 +24,7 @@ export const TaskList: FunctionComponent = () => {
 
   const { tasks, addTask, setTaskCompleted, updateTask, deleteTask } =
     useTasks();
-  const updateTaskDebounce = useDebounce(updateTask, 1_000);
+  const updateTaskDebounce = useDebounce(updateTask, 500);
 
   const [openTaskId, toggleOpenTask] = useOpenTaskTracker(listRef);
   const {
@@ -179,8 +179,11 @@ export const TaskList: FunctionComponent = () => {
 
   const handleChange = useCallback(
     (task: Task, change: Partial<Task>) => {
-      // if content has been cleared to empty then update immediatelly
-      const isCleared = Object.values(change).some((val) => !val);
+      // if content was emptied or was empty before then update immediatelly
+      const isCleared = Object.keys(change).some((key) => {
+        const theKey = key as keyof Task; // keep TS happy
+        return !change[theKey] || !task[theKey];
+      });
       const updateFn = isCleared ? updateTask : updateTaskDebounce;
       updateFn({
         id: task.id,
