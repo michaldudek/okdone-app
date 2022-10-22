@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import { Note } from 'phosphor-react';
 import {
   ChangeEventHandler,
@@ -12,6 +13,7 @@ import {
   useEffect,
   useRef,
 } from 'react';
+import { MediaQuery } from 'styles';
 import { Task } from '../../types';
 import { taskStatus } from '../../utils/taskStatus';
 import { TaskRowCheckbox } from './TaskRowCheckbox';
@@ -32,6 +34,15 @@ type Props = {
   onFocus?: (task: Task) => void;
   onKeyDown?: (task: Task, event: KeyboardEvent) => void;
 };
+
+const StyledNote = styled(Note)`
+  flex-shrink: 0;
+  margin-top: var(--6px);
+
+  ${MediaQuery.Tablet} {
+    margin-top: var(--3px);
+  }
+`;
 
 export const TaskRow: FunctionComponent<Props> = memo(
   ({
@@ -166,7 +177,7 @@ export const TaskRow: FunctionComponent<Props> = memo(
             data-status={taskStatus(task)}
             value={title}
           />
-          {!isOpen && task.notes?.length ? <Note size={16} /> : null}
+          {!isOpen && task.notes?.length ? <StyledNote size={16} /> : null}
         </TaskRowHeader>
         {isOpen && (
           <TaskRowNotes

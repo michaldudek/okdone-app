@@ -1,9 +1,10 @@
 import styled from '@emotion/styled';
+import { MediaQuery } from 'styles';
 
 export const TaskRowContainer = styled.div`
   min-height: var(--20px);
   padding: var(--4px) var(--16px);
-  margin-bottom: var(--2px);
+  margin-bottom: var(--6px);
   display: flex;
   flex-direction: column;
   align-items: stretch;
@@ -23,5 +24,9 @@ export const TaskRowContainer = styled.div`
     padding-top: var(--16px);
     background-color: var(--background-active);
     box-shadow: var(--shadow-elevated);
+  }
+
+  ${MediaQuery.Tablet} {
+    margin-bottom: var(--2px);
   }
 `;

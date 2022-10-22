@@ -1,3 +1,4 @@
+import styled from '@emotion/styled';
 import {
   FunctionComponent,
   KeyboardEvent as ReactKeyboardEvent,
@@ -6,6 +7,7 @@ import {
   useEffect,
   useRef,
 } from 'react';
+import { MediaQuery } from 'styles';
 import { useDebounce } from 'utils/useDebounce';
 import { TaskRow } from '../../components/TaskRow';
 import { useTasks } from '../../hooks/useTasks';
@@ -18,6 +20,16 @@ import {
 } from '../../utils/find';
 import { useFocusedTaskTracker } from './useFocusedTaskTracker';
 import { useOpenTaskTracker } from './useOpenTaskTracker';
+
+const StyledList = styled.ul`
+  padding: var(--24px) var(--16px);
+  font-size: var(--20px);
+
+  ${MediaQuery.Tablet} {
+    padding: var(--60px);
+    font-size: var(--16px);
+  }
+`;
 
 export const TaskList: FunctionComponent = () => {
   const listRef = useRef<HTMLUListElement>(null);
@@ -195,7 +207,7 @@ export const TaskList: FunctionComponent = () => {
 
   return (
     <>
-      <ul ref={listRef}>
+      <StyledList ref={listRef}>
         {tasks.map((task) => (
           <li key={task.id}>
             <TaskRow
@@ -212,7 +224,7 @@ export const TaskList: FunctionComponent = () => {
             />
           </li>
         ))}
-      </ul>
+      </StyledList>
     </>
   );
 };
