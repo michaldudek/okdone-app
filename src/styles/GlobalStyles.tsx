@@ -31,7 +31,7 @@ export const GlobalStyles: FunctionComponent = () => (
       :root {
         ${[
           2, 3, 4, 5, 6, 8, 10, 12, 14, 16, 20, 24, 28, 30, 32, 36, 40, 44, 48,
-          50, 52, 56, 60, 64, 70, 80, 90, 100, 120,
+          50, 52, 56, 60, 64, 70, 80, 90, 100, 120, 220,
         ].map((px) => `--${px}px: ${pxToRem(px)}\n`)}
       }
 
@@ -63,6 +63,7 @@ export const GlobalStyles: FunctionComponent = () => (
         --text-primary: ${slate.slate12};
         --text-secondary: ${slate.slate11};
         --text-tertiary: ${slate.slate10};
+        --text-disabled: var(--text-tertiary);
         --text-inverse: ${slate.slate1};
         --border-subtle: ${slate.slate6};
         --border-element: ${slate.slate7};
@@ -89,8 +90,9 @@ export const GlobalStyles: FunctionComponent = () => (
         --shadow-none: rgba(0, 0, 0, 0) 0 0 0;
         --shadow-elevated: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 
-        --transition-regular: 0.15s;
-        --ease-regular: ease-in-out;
+        --transition-regular: 150ms;
+        --transition-accent: 500ms;
+        --ease-regular: cubic-bezier(0.16, 1, 0.3, 1);
       }
 
       #root {
@@ -102,6 +104,16 @@ export const GlobalStyles: FunctionComponent = () => (
           justify-content: center;
           align-items: center;
         }
+      }
+
+      button {
+        border: 0;
+        padding: 0;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: inherit;
       }
     `}
   />

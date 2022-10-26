@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import {
+  ComponentProps,
   FunctionComponent,
   KeyboardEvent as ReactKeyboardEvent,
   MouseEvent,
@@ -31,7 +32,9 @@ const StyledList = styled.ul`
   }
 `;
 
-export const TaskList: FunctionComponent = () => {
+export const TaskList: FunctionComponent<ComponentProps<'ul'>> = ({
+  ...props
+}) => {
   const listRef = useRef<HTMLUListElement>(null);
 
   const { tasks, addTask, setTaskCompleted, updateTask, deleteTask } =
@@ -207,7 +210,7 @@ export const TaskList: FunctionComponent = () => {
 
   return (
     <>
-      <StyledList ref={listRef}>
+      <StyledList ref={listRef} {...props}>
         {tasks.map((task) => (
           <li key={task.id}>
             <TaskRow
