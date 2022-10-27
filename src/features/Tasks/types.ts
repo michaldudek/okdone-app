@@ -1,6 +1,6 @@
 import { Resource } from 'services/Storage';
 import { DateString } from 'types/DateString';
-import { CreateOptions } from './TasksRepository';
+import { PrepareOptions } from './TasksRepository';
 
 export const TASK_RESOURCE_NAME = 'tasks';
 
@@ -14,6 +14,6 @@ export type Task = Resource & {
 
 export type NewTask = Partial<Omit<Task, 'id'>> &
   Pick<Task, 'title'> &
-  CreateOptions;
+  PrepareOptions;
 
 export type TaskStatus = 'completed' | 'todo';

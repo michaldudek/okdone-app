@@ -51,17 +51,26 @@ export class Repository<T extends Resource = Resource> {
   }
 
   /**
-   * Create and store a resource in the repository.
+   * Prepare a fresh resource, augmentic it with any data necessary.
    *
    * @param data
    */
-  public async create(data: Partial<T>): Promise<T> {
-    const newData = {
+  public prepare(data: Partial<T>): T {
+    return {
       id: uuidv4(),
       createdAt: new Date(),
       updatedAt: null,
       ...data,
     } as T;
+  }
+
+  /**
+   * Create and store a resource in the repository.
+   *
+   * @param data
+   */
+  public async create(data: Partial<T>): Promise<T> {
+    const newData = this.prepare(data);
     return this.storage.create<T>(this.resourceName, newData);
   }
 
