@@ -44,7 +44,7 @@ const shortcuts: { label: string; keys: (SpecialKey | string)[] }[] = [
   },
   {
     label: 'Toggle this helper',
-    keys: ['meta', 'shift', 'k'],
+    keys: ['ctrl', 'shift', 'k'],
   },
 ];
 
@@ -94,7 +94,7 @@ export const KeyboardShortcuts: FunctionComponent = () => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.shiftKey && event.metaKey && event.key === 'k') {
+      if (event.shiftKey && event.ctrlKey && event.key.toLowerCase() === 'k') {
         setVisible((prev) => !prev);
       }
     };
@@ -110,7 +110,7 @@ export const KeyboardShortcuts: FunctionComponent = () => {
       <AppMenuButton
         tabIndex={0}
         title={`Show keyboard shortcuts (${platformKeys([
-          'meta',
+          'ctrl',
           'shift',
           'k',
         ])})`}

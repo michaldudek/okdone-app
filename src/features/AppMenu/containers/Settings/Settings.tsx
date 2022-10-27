@@ -7,15 +7,34 @@ import {
   DropdownMenuWrap,
 } from 'components/DropdownMenu';
 import { Logo } from 'components/Logo';
-import { FunctionComponent } from 'react';
+import { FunctionComponent, useEffect, useState } from 'react';
+import { platformKeys } from 'services/Platform';
 import { AppInfo } from '../../components/AppInfo';
 import { AppMenuButton } from '../../components/AppMenuButton';
 
 export const Settings: FunctionComponent = () => {
+  const [isOpen, setOpen] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.ctrlKey && event.shiftKey && event.key.toLowerCase() === 'h') {
+        setOpen((prev) => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   return (
-    <DropdownMenuWrap>
+    <DropdownMenuWrap open={isOpen} onOpenChange={(open) => setOpen(open)}>
       <DropdownMenuTrigger asChild>
-        <AppMenuButton tabIndex={0} title="Toggle settings">
+        <AppMenuButton
+          tabIndex={0}
+          title={`Toggle settings (${platformKeys(['ctrl', 'shift', 'h'])})`}
+        >
           <Logo size={28} />
         </AppMenuButton>
       </DropdownMenuTrigger>
