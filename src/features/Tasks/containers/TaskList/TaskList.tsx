@@ -12,7 +12,8 @@ import { MediaQuery } from 'styles';
 import { useDebounce } from 'utils/useDebounce';
 import { EmptyTasks } from '../../components/EmptyTasks';
 import { TaskRow } from '../../components/TaskRow';
-import { useTasks } from '../../hooks/useTasks';
+import { useTasksList } from '../../hooks/useTasksList';
+import { useTasksManager } from '../../hooks/useTasksManager';
 import { Task } from '../../types';
 import {
   findFirstTask,
@@ -40,8 +41,9 @@ export const TaskList: FunctionComponent<ComponentProps<'div'>> = ({
 }) => {
   const listRef = useRef<HTMLUListElement>(null);
 
-  const { tasks, addTask, setTaskCompleted, updateTask, deleteTask } =
-    useTasks();
+  const { tasks, isLoading } = useTasksList();
+  const { addTask, setTaskCompleted, updateTask, deleteTask } =
+    useTasksManager();
   const updateTaskDebounce = useDebounce(updateTask, 500);
 
   const [openTaskId, toggleOpenTask] = useOpenTaskTracker(listRef);
@@ -221,7 +223,7 @@ export const TaskList: FunctionComponent<ComponentProps<'div'>> = ({
   return (
     <div {...props}>
       <StyledList ref={listRef}>
-        {tasks.length === 0 && (
+        {tasks.length === 0 && !isLoading && (
           <li>
             <EmptyTasks addTask={addNewTask} />
           </li>

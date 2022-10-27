@@ -1,10 +1,11 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useCallback } from 'react';
 import { getRepository, PartialWithId, ResourceId } from 'services/Storage';
 import { todayToDateString } from 'types/DateString';
 import { TasksRepository } from '../TasksRepository';
 import { NewTask, Task, TASK_RESOURCE_NAME } from '../types';
 import { findTask, replaceTask } from '../utils/find';
+import { TASKS_LIST_QUERY_NAME } from './useTasksList';
 
 type PartialTask = PartialWithId<Task>;
 type AddContext = { task?: Task; taskIndex?: number };
@@ -18,36 +19,31 @@ export type SetTaskCompletedFn = (
   complete?: boolean,
 ) => Promise<Task>;
 
-type UseTasksReturn = {
-  tasks: Task[];
+type UseTasksManager = () => {
   addTask: AddTaskFn;
   updateTask: UpdateTaskFn;
   deleteTask: DeleteTaskFn;
   setTaskCompleted: SetTaskCompletedFn;
-  error: unknown | undefined;
-  isLoading: boolean;
 };
 
-export const useTasks = (): UseTasksReturn => {
+/**
+ * Manipulate tasks.
+ */
+export const useTasksManager: UseTasksManager = () => {
   const repository = getRepository<Task, TasksRepository>(TASK_RESOURCE_NAME);
 
   const queryClient = useQueryClient();
-
-  const { data, isLoading, error } = useQuery<Task[]>(
-    [TASK_RESOURCE_NAME],
-    () => repository.findToday(),
-  );
 
   /**
    * Get cached tasks list directly.
    */
   const getQueryData = () =>
-    queryClient.getQueryData<Task[]>([TASK_RESOURCE_NAME]) ?? [];
+    queryClient.getQueryData<Task[]>(TASKS_LIST_QUERY_NAME) ?? [];
   /**
    * Set cached tasks list (e.g. for optimistic updates).
    */
   const setQueryData = (tasks: Task[]) =>
-    queryClient.setQueryData([TASK_RESOURCE_NAME], tasks);
+    queryClient.setQueryData(TASKS_LIST_QUERY_NAME, tasks);
 
   /**
    * Add task.
@@ -61,7 +57,7 @@ export const useTasks = (): UseTasksReturn => {
        * update the query cache.
        */
       onMutate: async ({ taskBefore, taskAfter, ...newTask }) => {
-        await queryClient.cancelQueries([TASK_RESOURCE_NAME]);
+        await queryClient.cancelQueries(TASKS_LIST_QUERY_NAME);
 
         const tasks = getQueryData();
         const task = repository.prepare(newTask, { taskBefore, taskAfter });
@@ -120,7 +116,7 @@ export const useTasks = (): UseTasksReturn => {
        * Optimistically update the task in the query cache.
        */
       onMutate: async (newTask) => {
-        await queryClient.cancelQueries([TASK_RESOURCE_NAME]);
+        await queryClient.cancelQueries(TASKS_LIST_QUERY_NAME);
 
         const tasks = getQueryData();
 
@@ -163,7 +159,7 @@ export const useTasks = (): UseTasksReturn => {
        * Optimistically remove the task from the list and update the query cache.
        */
       onMutate: async (id: ResourceId) => {
-        await queryClient.cancelQueries([TASK_RESOURCE_NAME]);
+        await queryClient.cancelQueries(TASKS_LIST_QUERY_NAME);
         const tasks = getQueryData();
 
         const [, index] = findTask(tasks, id);
@@ -191,12 +187,9 @@ export const useTasks = (): UseTasksReturn => {
   );
 
   return {
-    tasks: data ?? [],
     addTask,
     updateTask,
     deleteTask,
     setTaskCompleted,
-    error,
-    isLoading,
   };
 };
