@@ -12,6 +12,7 @@ import {
   ReactNode,
   useCallback,
 } from 'react';
+import { platformKeys, SpecialKey } from 'services/Platform';
 import { indicatorItemStyle, itemStyle } from './styles';
 
 const StyledItemIndicator = styled(ItemIndicator)`
@@ -83,7 +84,7 @@ export const DropdownMenuRadioItem: FunctionComponent<
   </StyledRadioItem>
 );
 
-export const DropdownMenuItemShortcut = styled.span`
+const StyledItemShortcut = styled.span`
   margin-left: auto;
   padding-left: var(--20px);
   color: var(--text-tertiary);
@@ -96,3 +97,22 @@ export const DropdownMenuItemShortcut = styled.span`
     color: var(--text-disabled);
   }
 `;
+
+type ItemShortcutProps = {
+  children?: ReactNode;
+  keys?: SpecialKey | (SpecialKey | string)[] | string;
+};
+
+export const DropdownMenuItemShortcut: FunctionComponent<ItemShortcutProps> = ({
+  children: childrenProp,
+  keys: keysProp,
+}) => {
+  let children: ReactNode;
+  if (keysProp) {
+    const keys = typeof keysProp === 'string' ? [keysProp] : keysProp;
+    children = platformKeys(keys);
+  } else {
+    children = childrenProp;
+  }
+  return <StyledItemShortcut>{children}</StyledItemShortcut>;
+};
