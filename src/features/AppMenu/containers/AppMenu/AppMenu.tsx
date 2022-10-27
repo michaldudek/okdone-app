@@ -1,7 +1,6 @@
 import styled from '@emotion/styled';
-import { Plus } from 'phosphor-react';
 import { ComponentProps, FunctionComponent } from 'react';
-import { AppMenuButton } from '../../components/AppMenuButton';
+import { AddTask } from '../../components/AddTask';
 import { KeyboardShortcuts } from '../../components/KeyboardShortcuts';
 import { Settings } from '../Settings';
 
@@ -23,9 +22,7 @@ export const AppMenu: FunctionComponent<ComponentProps<'nav'>> = ({
   return (
     <StyledNav {...props}>
       <Settings />
-      <AppMenuButton tabIndex={0} title="Add new task">
-        <Plus size={28} />
-      </AppMenuButton>
+      <AddTask />
       <KeyboardShortcuts />
     </StyledNav>
   );

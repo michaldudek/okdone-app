@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Keyboard } from 'phosphor-react';
 import { FunctionComponent, useEffect, useState } from 'react';
-import { platformKey, SpecialKey } from 'services/Platform';
+import { platformKey, platformKeys, SpecialKey } from 'services/Platform';
 import { slideInStyles } from 'styles';
 import { AppMenuButton } from '../../components/AppMenuButton';
 
@@ -109,7 +109,11 @@ export const KeyboardShortcuts: FunctionComponent = () => {
     <StyledWrap>
       <AppMenuButton
         tabIndex={0}
-        title="Show keyboard shortcuts"
+        title={`Show keyboard shortcuts (${platformKeys([
+          'meta',
+          'shift',
+          'k',
+        ])})`}
         onClick={() => setVisible((prev) => !prev)}
       >
         <Keyboard
