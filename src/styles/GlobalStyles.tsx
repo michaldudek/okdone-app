@@ -15,6 +15,7 @@ export const GlobalStyles: FunctionComponent = () => (
       html {
         font-family: 'Noto Sans', sans-serif;
         font-size: 16px;
+        font-weight: 300;
         color: var(--text-primary);
         background-color: var(--background-app);
       }
