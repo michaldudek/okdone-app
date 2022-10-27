@@ -1,12 +1,5 @@
 import { css } from '@emotion/react';
-import {
-  MediaQuery,
-  MotionEnabled,
-  slideDownAndFade,
-  slideLeftAndFade,
-  slideRightAndFade,
-  slideUpAndFade,
-} from 'styles';
+import { MediaQuery, slideInStyles } from 'styles';
 
 export const contentStyle = css`
   width: 100vw;
@@ -20,26 +13,7 @@ export const contentStyle = css`
     min-width: var(--220px);
   }
 
-  ${MotionEnabled} {
-    will-change: transform, opacity;
-    animation-duration: var(--transition-accent);
-    animation-timing-function: var(--ease-regular);
-
-    &[data-state='open'] {
-      &[data-side='top'] {
-        animation-name: ${slideUpAndFade};
-      }
-      &[data-side='right'] {
-        animation-name: ${slideLeftAndFade};
-      }
-      &[data-side='bottom'] {
-        animation-name: ${slideDownAndFade};
-      }
-      &[data-side='left'] {
-        animation-name: ${slideRightAndFade};
-      }
-    }
-  }
+  ${slideInStyles}
 `;
 
 export const itemStyle = css`

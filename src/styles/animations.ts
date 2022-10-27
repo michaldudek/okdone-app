@@ -1,4 +1,4 @@
-import { keyframes } from '@emotion/react';
+import { css, keyframes } from '@emotion/react';
 
 export const MotionEnabled = `@media (prefers-reduced-motion: no-preference)`;
 
@@ -47,5 +47,28 @@ export const slideLeftAndFade = keyframes`
   100% {
     opacity: 1;
     transform: translateX(0);
+  }
+`;
+
+export const slideInStyles = css`
+  ${MotionEnabled} {
+    will-change: transform, opacity;
+    animation-duration: var(--transition-accent);
+    animation-timing-function: var(--ease-regular);
+
+    &[data-state='open'] {
+      &[data-side='top'] {
+        animation-name: ${slideUpAndFade};
+      }
+      &[data-side='right'] {
+        animation-name: ${slideLeftAndFade};
+      }
+      &[data-side='bottom'] {
+        animation-name: ${slideDownAndFade};
+      }
+      &[data-side='left'] {
+        animation-name: ${slideRightAndFade};
+      }
+    }
   }
 `;

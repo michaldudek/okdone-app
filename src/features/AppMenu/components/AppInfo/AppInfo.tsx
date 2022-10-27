@@ -7,7 +7,7 @@ import { MediaQuery } from 'styles';
 const Banner = styled.div`
   display: flex;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: var(--8px);
 `;
 
@@ -21,6 +21,7 @@ const Info = styled.div`
 `;
 
 const AppName = styled.h1`
+  color: var(--text-primary);
   font-weight: bold;
   margin-bottom: var(--8px);
 `;
@@ -31,6 +32,7 @@ const AppVersion = styled.p`
 
 const Description = styled.p`
   line-height: 1.2;
+  color: var(--text-tertiary);
 
   ${MediaQuery.Tablet} {
     max-width: var(--220px);

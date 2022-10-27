@@ -31,7 +31,7 @@ export const GlobalStyles: FunctionComponent = () => (
       :root {
         ${[
           2, 3, 4, 5, 6, 8, 10, 12, 14, 16, 20, 24, 28, 30, 32, 36, 40, 44, 48,
-          50, 52, 56, 60, 64, 70, 80, 90, 100, 120, 220,
+          50, 52, 56, 60, 64, 70, 80, 90, 100, 120, 220, 250, 300,
         ].map((px) => `--${px}px: ${pxToRem(px)}\n`)}
       }
 
@@ -63,7 +63,7 @@ export const GlobalStyles: FunctionComponent = () => (
         --text-primary: ${slate.slate12};
         --text-secondary: ${slate.slate11};
         --text-tertiary: ${slate.slate10};
-        --text-disabled: var(--text-tertiary);
+        --text-disabled: ${slate.slate8};
         --text-inverse: ${slate.slate1};
         --border-subtle: ${slate.slate6};
         --border-element: ${slate.slate7};
