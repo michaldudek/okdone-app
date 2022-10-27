@@ -1,4 +1,5 @@
 import styled from '@emotion/styled';
+import { Label } from 'components/Label';
 import { Logo } from 'components/Logo';
 import { FunctionComponent } from 'react';
 import { getConfig } from 'services/Config';
@@ -46,7 +47,9 @@ export const AppInfo: FunctionComponent = ({ ...props }) => {
         <StyledLogo size={48} />
         <Info>
           <AppName>OK, Done!</AppName>
-          <AppVersion>{getConfig('version')}</AppVersion>
+          <AppVersion>
+            {getConfig('version')} <Label variant="danger">Alpha</Label>
+          </AppVersion>
         </Info>
       </Banner>
       <Description>
