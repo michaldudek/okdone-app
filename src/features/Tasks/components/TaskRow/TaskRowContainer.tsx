@@ -10,6 +10,7 @@ export const TaskRowContainer = styled.div`
   align-items: stretch;
   justify-content: flex-start;
   outline: none;
+  font-weight: normal;
   border-radius: var(--border-radius-small);
   transition: all var(--transition-regular) var(--ease-regular),
     background-color 0s;

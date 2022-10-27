@@ -10,6 +10,7 @@ import {
 } from 'react';
 import { MediaQuery } from 'styles';
 import { useDebounce } from 'utils/useDebounce';
+import { EmptyTasks } from '../../components/EmptyTasks';
 import { TaskRow } from '../../components/TaskRow';
 import { useTasks } from '../../hooks/useTasks';
 import { Task } from '../../types';
@@ -27,12 +28,14 @@ const StyledList = styled.ul`
   font-size: var(--20px);
 
   ${MediaQuery.Tablet} {
+    margin: 0 auto;
+    width: var(--768px);
     padding: var(--60px);
     font-size: var(--16px);
   }
 `;
 
-export const TaskList: FunctionComponent<ComponentProps<'ul'>> = ({
+export const TaskList: FunctionComponent<ComponentProps<'div'>> = ({
   ...props
 }) => {
   const listRef = useRef<HTMLUListElement>(null);
@@ -50,16 +53,23 @@ export const TaskList: FunctionComponent<ComponentProps<'ul'>> = ({
     onFocusTask,
   } = useFocusedTaskTracker();
 
+  const addNewTask = useCallback(
+    async (title?: string) => {
+      const newTask = await addTask({
+        title: title ?? '',
+        taskBefore: findLastTask(tasks),
+      });
+      setFocusedTask(newTask.id);
+    },
+    [addTask, setFocusedTask, tasks],
+  );
+
   useEffect(() => {
     const handleKeyDown = async (event: KeyboardEvent) => {
       // CTRL+N creates a new task at the end of the list
       if (event.key.toLowerCase() === 'n' && event.ctrlKey) {
         event.preventDefault();
-        const newTask = await addTask({
-          title: '',
-          taskBefore: findLastTask(tasks),
-        });
-        setFocusedTask(newTask.id);
+        await addNewTask();
         return;
       }
 
@@ -86,7 +96,7 @@ export const TaskList: FunctionComponent<ComponentProps<'ul'>> = ({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [addTask, focusedTaskId, setFocusedTask, tasks]);
+  }, [addNewTask, addTask, focusedTaskId, setFocusedTask, tasks]);
 
   const handleKeyDown = useCallback(
     (task: Task, event: ReactKeyboardEvent) => {
@@ -209,8 +219,13 @@ export const TaskList: FunctionComponent<ComponentProps<'ul'>> = ({
   );
 
   return (
-    <>
-      <StyledList ref={listRef} {...props}>
+    <div {...props}>
+      <StyledList ref={listRef}>
+        {tasks.length === 0 && (
+          <li>
+            <EmptyTasks addTask={addNewTask} />
+          </li>
+        )}
         {tasks.map((task) => (
           <li key={task.id}>
             <TaskRow
@@ -228,6 +243,6 @@ export const TaskList: FunctionComponent<ComponentProps<'ul'>> = ({
           </li>
         ))}
       </StyledList>
-    </>
+    </div>
   );
 };
