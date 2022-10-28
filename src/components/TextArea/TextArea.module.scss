@@ -1,0 +1,25 @@
+.wrap {
+  display: grid;
+
+  &::after {
+    visibility: hidden;
+    content: attr(data-val) ' ';
+    white-space: pre-wrap;
+  }
+
+  & > textarea {
+    outline: none;
+    border: none;
+    background: transparent;
+    overflow: hidden;
+    resize: none;
+  }
+
+  & > textarea,
+  &::after {
+    grid-area: 1 / 1 / 2 / 2;
+    padding: var(--16px) 0;
+    font: inherit;
+    line-height: 1.3;
+  }
+}

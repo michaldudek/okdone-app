@@ -1,0 +1,28 @@
+.label {
+  --label-background: var(--background-element);
+  --label-font-color: var(--text-secondary);
+  display: inline-block;
+  border-radius: var(--border-radius-regular);
+  background: var(--label-background);
+  padding: var(--3px) var(--6px);
+  color: var(--label-font-color);
+  font-size: var(--12px);
+
+  &[data-variant='accent'] {
+    --label-background: var(--color-accent);
+  }
+  &[data-variant='success'] {
+    --label-background: var(--color-success);
+  }
+  &[data-variant='warning'] {
+    --label-background: var(--color-warning);
+    --label-font-color: var(--text-inverse);
+  }
+  &[data-variant='danger'] {
+    --label-background: var(--color-danger);
+    --label-font-color: var(--text-inverse);
+  }
+  &[data-variant='disabled'] {
+    --label-background: var(--background-element);
+  }
+}

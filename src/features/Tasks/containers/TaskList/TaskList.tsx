@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import {
   ComponentProps,
   FunctionComponent,
@@ -8,7 +7,6 @@ import {
   useEffect,
   useRef,
 } from 'react';
-import { MediaQuery } from 'styles';
 import { useDebounce } from 'utils/useDebounce';
 import { EmptyTasks } from '../../components/EmptyTasks';
 import { TaskRow } from '../../components/TaskRow';
@@ -21,20 +19,9 @@ import {
   findTaskAfter,
   findTaskBefore,
 } from '../../utils/find';
+import styles from './TaskList.module.scss';
 import { useFocusedTaskTracker } from './useFocusedTaskTracker';
 import { useOpenTaskTracker } from './useOpenTaskTracker';
-
-const StyledList = styled.ul`
-  padding: var(--24px) var(--16px);
-  font-size: var(--20px);
-
-  ${MediaQuery.Tablet} {
-    margin: 0 auto;
-    width: var(--768px);
-    padding: var(--60px);
-    font-size: var(--16px);
-  }
-`;
 
 export const TaskList: FunctionComponent<ComponentProps<'div'>> = ({
   ...props
@@ -222,7 +209,7 @@ export const TaskList: FunctionComponent<ComponentProps<'div'>> = ({
 
   return (
     <div {...props}>
-      <StyledList ref={listRef}>
+      <ul ref={listRef} className={styles.list}>
         {tasks.length === 0 && !isLoading && (
           <li>
             <EmptyTasks addTask={addNewTask} />
@@ -244,7 +231,7 @@ export const TaskList: FunctionComponent<ComponentProps<'div'>> = ({
             />
           </li>
         ))}
-      </StyledList>
+      </ul>
     </div>
   );
 };

@@ -1,0 +1,36 @@
+@use 'styles/media.scss';
+
+.banner {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: var(--8px);
+}
+
+.logo {
+  flex-shrink: 0;
+  margin-right: var(--16px);
+}
+
+.info {
+  flex: 1;
+}
+
+.appName {
+  margin-bottom: var(--8px);
+  color: var(--text-primary);
+  font-weight: bold;
+}
+
+.appVersion {
+  color: var(--text-tertiary);
+}
+
+.description {
+  color: var(--text-tertiary);
+  line-height: 1.2;
+
+  @include media.tablet {
+    max-width: var(--220px);
+  }
+}

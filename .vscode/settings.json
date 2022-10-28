@@ -6,6 +6,6 @@
   "editor.formatOnSave": true,
   "editor.rulers": [80, 120],
   "typescript.preferences.importModuleSpecifier": "non-relative",
-  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.tsdk": "./node_modules/typescript/lib",
   "jestrunner.jestCommand": "npm run test -- --watchAll=false"
 }

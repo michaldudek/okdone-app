@@ -1,0 +1,37 @@
+@use './utils.scss';
+
+@mixin phone {
+  @media (min-width: #{utils.pxToRem(0)}) {
+    @content;
+  }
+}
+
+@mixin landscape {
+  @media (min-width: #{utils.pxToRem(576)}) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: #{utils.pxToRem(768)}) {
+    @content;
+  }
+}
+
+@mixin laptop {
+  @media (min-width: #{utils.pxToRem(1200)}) {
+    @content;
+  }
+}
+
+@mixin monitor {
+  @media (min-width: #{utils.pxToRem(1400)}) {
+    @content;
+  }
+}
+
+@mixin motion {
+  @media (prefers-reduced-motion: no-preference) {
+    @content;
+  }
+}

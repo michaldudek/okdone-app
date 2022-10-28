@@ -1,0 +1,88 @@
+@use 'styles/media.scss';
+
+.taskRow {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  transition: all var(--transition-regular) var(--ease-regular),
+    background-color 0s;
+  margin-bottom: var(--6px);
+  outline: none;
+  border-radius: var(--border-radius-small);
+  padding: var(--4px) var(--16px);
+  min-height: var(--20px);
+  font-weight: normal;
+
+  &:focus,
+  &[data-focused='true'] {
+    background-color: var(--highlight-background);
+  }
+
+  &[aria-expanded='true'] {
+    margin-bottom: var(--16px);
+    box-shadow: var(--shadow-elevated);
+    background-color: var(--background-active);
+    padding-top: var(--16px);
+  }
+
+  @include media.tablet {
+    margin-bottom: var(--2px);
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.note {
+  flex-shrink: 0;
+  margin-top: var(--6px);
+
+  @include media.tablet {
+    margin-top: var(--3px);
+  }
+}
+
+.checkbox {
+  --size: var(--20px);
+  flex-shrink: 0;
+  margin-top: var(--2px);
+  margin-right: var(--6px);
+  width: var(--size);
+  height: var(--size);
+
+  @include media.tablet {
+    --size: var(--16px);
+    margin-top: var(--3px);
+  }
+}
+
+.title {
+  &[data-val] {
+    &,
+    & > textarea,
+    &::after {
+      padding: 0;
+    }
+  }
+
+  [data-status='completed'] {
+    &,
+    & > textarea,
+    &::after {
+      color: var(--text-tertiary);
+    }
+  }
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: var(--24px);
+  color: var(--text-tertiary);
+  font-size: var(--12px);
+}

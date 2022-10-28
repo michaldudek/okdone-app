@@ -1,0 +1,15 @@
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  outline: none;
+  border-radius: var(--border-radius-small);
+  background-color: var(--background-active);
+  min-width: var(--32px);
+  text-align: center;
+
+  &:hover,
+  &:focus {
+    background-color: var(--background-hover);
+  }
+}

@@ -1,0 +1,13 @@
+@use 'styles/media.scss';
+
+.list {
+  padding: var(--24px) var(--16px);
+  font-size: var(--20px);
+
+  @include media.tablet {
+    margin: 0 auto;
+    padding: var(--60px);
+    width: var(--768px);
+    font-size: var(--16px);
+  }
+}

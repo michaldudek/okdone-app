@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import clsx from 'clsx';
 import {
   ComponentPropsWithoutRef,
   FormEventHandler,
@@ -7,34 +7,9 @@ import {
   useCallback,
   useRef,
 } from 'react';
+import styles from './TextArea.module.scss';
 
 type Props = ComponentPropsWithoutRef<'textarea'>;
-
-const StyledWrap = styled.div`
-  display: grid;
-
-  &::after {
-    content: attr(data-val) ' ';
-    white-space: pre-wrap;
-    visibility: hidden;
-  }
-
-  & > textarea {
-    outline: none;
-    resize: none;
-    overflow: hidden;
-    border: none;
-    background: transparent;
-  }
-
-  & > textarea,
-  &::after {
-    padding: var(--16px) 0;
-    font: inherit;
-    line-height: 1.3;
-    grid-area: 1 / 1 / 2 / 2;
-  }
-`;
 
 export const TextArea: FunctionComponent<Props> = forwardRef<
   HTMLTextAreaElement,
@@ -53,13 +28,17 @@ export const TextArea: FunctionComponent<Props> = forwardRef<
   );
 
   return (
-    <StyledWrap ref={wrapRef} data-val={value} className={className}>
+    <div
+      ref={wrapRef}
+      data-val={value}
+      className={clsx(styles.wrap, className)}
+    >
       <textarea
         ref={ref}
         defaultValue={value}
         {...otherProps}
         onInput={handleInput}
       />
-    </StyledWrap>
+    </div>
   );
 });

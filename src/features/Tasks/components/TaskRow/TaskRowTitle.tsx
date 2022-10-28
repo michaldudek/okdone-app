@@ -1,4 +1,3 @@
-import styled from '@emotion/styled';
 import { TextArea } from 'components/TextArea';
 import {
   ComponentProps,
@@ -6,24 +5,9 @@ import {
   KeyboardEventHandler,
   useCallback,
 } from 'react';
+import styles from './TaskRow.module.scss';
 
 type Props = ComponentProps<'textarea'>;
-
-const StyledTextArea = styled(TextArea)`
-  &,
-  & > textarea,
-  &::after {
-    padding: 0;
-  }
-
-  [data-status='completed'] {
-    &,
-    & > textarea,
-    &::after {
-      color: var(--text-tertiary);
-    }
-  }
-`;
 
 export const TaskRowTitle = forwardRef<HTMLTextAreaElement, Props>(
   ({ value, onKeyDown, ...props }, ref) => {
@@ -45,8 +29,9 @@ export const TaskRowTitle = forwardRef<HTMLTextAreaElement, Props>(
     );
 
     return (
-      <StyledTextArea
+      <TextArea
         ref={ref}
+        className={styles.title}
         value={value}
         // set initial dimensions minimal
         rows={1}

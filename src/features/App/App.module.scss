@@ -1,0 +1,21 @@
+.app {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  background-color: var(--background-app);
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.menu {
+  flex-shrink: 0;
+  order: 1;
+}
+
+.taskList {
+  flex: 1;
+  order: 0;
+  overflow-y: auto;
+}

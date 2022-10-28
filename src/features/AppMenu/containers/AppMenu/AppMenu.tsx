@@ -1,29 +1,18 @@
-import styled from '@emotion/styled';
+import clsx from 'clsx';
 import { ComponentProps, FunctionComponent } from 'react';
 import { AddTask } from '../../components/AddTask';
 import { KeyboardShortcuts } from '../../components/KeyboardShortcuts';
-import { Settings } from '../Settings';
+import { Settings } from '../../components/Settings';
+import styles from './AppMenu.module.scss';
 
-const StyledNav = styled.nav`
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  height: var(--50px);
-  padding: 0 var(--16px);
-  background-color: var(--background-active);
-  border-top: 1px solid var(--border-element);
-`;
+type Props = ComponentProps<'nav'>;
 
-export const AppMenu: FunctionComponent<ComponentProps<'nav'>> = ({
-  ...props
-}) => {
+export const AppMenu: FunctionComponent<Props> = ({ className, ...props }) => {
   return (
-    <StyledNav {...props}>
+    <nav className={clsx(styles.nav, className)} {...props}>
       <Settings />
       <AddTask />
       <KeyboardShortcuts />
-    </StyledNav>
+    </nav>
   );
 };

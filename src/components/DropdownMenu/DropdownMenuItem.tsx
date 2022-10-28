@@ -1,10 +1,10 @@
-import styled from '@emotion/styled';
 import {
   CheckboxItem,
   Item,
   ItemIndicator,
   RadioItem,
 } from '@radix-ui/react-dropdown-menu';
+import clsx from 'clsx';
 import { ArrowSquareOut, Check } from 'phosphor-react';
 import {
   ComponentProps,
@@ -13,54 +13,45 @@ import {
   useCallback,
 } from 'react';
 import { platformKeys, SpecialKey } from 'services/Platform';
-import { indicatorItemStyle, itemStyle } from './styles';
+import { WithChildren } from 'types/PropTypes';
+import styles from './DropdownMenu.module.scss';
 
-const StyledItemIndicator = styled(ItemIndicator)`
-  position: absolute;
-  left: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
-const StyledCheckboxItem = styled(CheckboxItem)`
-  ${indicatorItemStyle}
-`;
-
-const StyledRadioItem = styled(RadioItem)`
-  ${indicatorItemStyle}
-`;
-
-export const DropdownMenuItemCheck: FunctionComponent = () => (
-  <StyledItemIndicator>
+const DropdownMenuItemCheck: FunctionComponent = () => (
+  <ItemIndicator className={styles.indicator}>
     <Check size={20} color="var(--text-primary)" />
-  </StyledItemIndicator>
+  </ItemIndicator>
 );
 
-export const DropdownMenuItem = styled(Item)`
-  ${itemStyle}
-`;
+export const DropdownMenuItem: FunctionComponent<
+  ComponentProps<typeof Item>
+> = ({ className, children, ...props }) => {
+  return (
+    <Item className={clsx(styles.item, className)} {...props}>
+      {children}
+    </Item>
+  );
+};
 
-type LinkItemProps = {
-  children: ReactNode;
+type LinkItemProps = WithChildren<ComponentProps<typeof DropdownMenuItem>> & {
   href: string;
 };
 
 export const DropdownMenuLinkItem: FunctionComponent<LinkItemProps> = ({
   children,
   href,
+  ...props
 }) => {
   const handleSelect = useCallback(() => {
     window.open(href, '_blank');
   }, [href]);
 
   return (
-    <DropdownMenuItem onSelect={handleSelect}>
+    <DropdownMenuItem onSelect={handleSelect} {...props}>
       <a href={href} target="_blank" rel="noopener noreferrer">
         {children}
-        <DropdownMenuItemShortcut>
+        <DropdownMenuItemKeyShortcut>
           <ArrowSquareOut size={18} />
-        </DropdownMenuItemShortcut>
+        </DropdownMenuItemKeyShortcut>
       </a>
     </DropdownMenuItem>
   );
@@ -68,45 +59,32 @@ export const DropdownMenuLinkItem: FunctionComponent<LinkItemProps> = ({
 
 export const DropdownMenuCheckboxItem: FunctionComponent<
   ComponentProps<typeof CheckboxItem>
-> = ({ children, ...props }) => (
-  <StyledCheckboxItem {...props}>
+> = ({ children, className, ...props }) => (
+  <CheckboxItem
+    className={clsx(styles.itemWithIndicator, className)}
+    {...props}
+  >
     <DropdownMenuItemCheck />
     {children}
-  </StyledCheckboxItem>
+  </CheckboxItem>
 );
 
 export const DropdownMenuRadioItem: FunctionComponent<
   ComponentProps<typeof RadioItem>
-> = ({ children, ...props }) => (
-  <StyledRadioItem {...props}>
+> = ({ children, className, ...props }) => (
+  <RadioItem className={clsx(styles.itemWithIndicator, className)} {...props}>
     <DropdownMenuItemCheck />
     {children}
-  </StyledRadioItem>
+  </RadioItem>
 );
 
-const StyledItemShortcut = styled.span`
-  margin-left: auto;
-  padding-left: var(--20px);
-  color: var(--text-tertiary);
-
-  &[data-highlighted] {
-    color: var(--text-inverse);
-  }
-
-  &[data-disabled] {
-    color: var(--text-disabled);
-  }
-`;
-
-type ItemShortcutProps = {
-  children?: ReactNode;
+type ItemKeyShortcutProps = WithChildren<{
   keys?: SpecialKey | (SpecialKey | string)[] | string;
-};
+}>;
 
-export const DropdownMenuItemShortcut: FunctionComponent<ItemShortcutProps> = ({
-  children: childrenProp,
-  keys: keysProp,
-}) => {
+export const DropdownMenuItemKeyShortcut: FunctionComponent<
+  ItemKeyShortcutProps
+> = ({ children: childrenProp, keys: keysProp }) => {
   let children: ReactNode;
   if (keysProp) {
     const keys = typeof keysProp === 'string' ? [keysProp] : keysProp;
@@ -114,5 +92,5 @@ export const DropdownMenuItemShortcut: FunctionComponent<ItemShortcutProps> = ({
   } else {
     children = childrenProp;
   }
-  return <StyledItemShortcut>{children}</StyledItemShortcut>;
+  return <span className={styles.itemKeyShortcut}>{children}</span>;
 };

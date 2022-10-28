@@ -9,8 +9,8 @@ import {
 import { Logo } from 'components/Logo';
 import { FunctionComponent, useEffect, useState } from 'react';
 import { platformKeys } from 'services/Platform';
-import { AppInfo } from '../../components/AppInfo';
-import { AppMenuButton } from '../../components/AppMenuButton';
+import { AppInfo } from '../AppInfo';
+import { AppMenuButton } from '../AppMenuButton';
 
 export const Settings: FunctionComponent = () => {
   const [isOpen, setOpen] = useState(false);

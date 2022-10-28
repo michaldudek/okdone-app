@@ -1,0 +1,39 @@
+.wrap {
+  position: relative;
+}
+
+.container {
+  composes: slideIn from 'styles/animations.module.scss';
+  display: none;
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + var(--20px));
+  min-width: var(--250px);
+  color: var(--text-disabled);
+  font-weight: 300;
+  line-height: 1.5;
+  text-align: right;
+
+  &[data-state='open'] {
+    display: block;
+  }
+}
+
+.item {
+  margin-bottom: var(--8px);
+}
+
+.keys {
+  display: inline-block;
+  margin-left: var(--8px);
+}
+
+.key {
+  display: inline-block;
+  margin-left: var(--2px);
+  border: 1px solid var(--border-element);
+  border-radius: var(--border-radius-small);
+  background: var(--color-active);
+  padding: 0 var(--4px);
+  font-size: var(--12px);
+}

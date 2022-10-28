@@ -1,61 +1,27 @@
-import styled from '@emotion/styled';
 import { Label } from 'components/Label';
 import { Logo } from 'components/Logo';
-import { FunctionComponent } from 'react';
+import { ComponentProps, FunctionComponent } from 'react';
 import { getConfig } from 'services/Config';
-import { MediaQuery } from 'styles';
+import styles from './AppInfo.module.scss';
 
-const Banner = styled.div`
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  margin-bottom: var(--8px);
-`;
+type Props = ComponentProps<'div'>;
 
-const StyledLogo = styled(Logo)`
-  flex-shrink: 0;
-  margin-right: var(--16px);
-`;
-
-const Info = styled.div`
-  flex: 1;
-`;
-
-const AppName = styled.h1`
-  color: var(--text-primary);
-  font-weight: bold;
-  margin-bottom: var(--8px);
-`;
-
-const AppVersion = styled.p`
-  color: var(--text-tertiary);
-`;
-
-const Description = styled.p`
-  line-height: 1.2;
-  color: var(--text-tertiary);
-
-  ${MediaQuery.Tablet} {
-    max-width: var(--220px);
-  }
-`;
-
-export const AppInfo: FunctionComponent = ({ ...props }) => {
+export const AppInfo: FunctionComponent<Props> = ({ ...props }) => {
   return (
     <div {...props}>
-      <Banner>
-        <StyledLogo size={48} />
-        <Info>
-          <AppName>OK, Done!</AppName>
-          <AppVersion>
+      <div className={styles.banner}>
+        <Logo size={48} className={styles.logo} />
+        <div className={styles.info}>
+          <h1 className={styles.appName}>OK, Done!</h1>
+          <p className={styles.appVersion}>
             {getConfig('version')} <Label variant="danger">Alpha</Label>
-          </AppVersion>
-        </Info>
-      </Banner>
-      <Description>
+          </p>
+        </div>
+      </div>
+      <p className={styles.description}>
         An experimental TODO app serving as development kitchen sink and
         playground for ideas around modern web/app dev.
-      </Description>
+      </p>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import { Checkbox } from 'components/Checkbox';
 import { Note } from 'phosphor-react';
 import {
   ChangeEventHandler,
@@ -13,13 +13,10 @@ import {
   useEffect,
   useRef,
 } from 'react';
-import { MediaQuery } from 'styles';
 import { Task } from '../../types';
 import { taskStatus } from '../../utils/taskStatus';
-import { TaskRowCheckbox } from './TaskRowCheckbox';
-import { TaskRowContainer } from './TaskRowContainer';
+import styles from './TaskRow.module.scss';
 import { TaskRowFooter } from './TaskRowFooter';
-import { TaskRowHeader } from './TaskRowHeader';
 import { TaskRowNotes } from './TaskRowNotes';
 import { TaskRowTitle } from './TaskRowTitle';
 
@@ -34,15 +31,6 @@ type Props = {
   onFocus?: (task: Task) => void;
   onKeyDown?: (task: Task, event: KeyboardEvent) => void;
 };
-
-const StyledNote = styled(Note)`
-  flex-shrink: 0;
-  margin-top: var(--6px);
-
-  ${MediaQuery.Tablet} {
-    margin-top: var(--3px);
-  }
-`;
 
 export const TaskRow: FunctionComponent<Props> = memo(
   ({
@@ -151,9 +139,10 @@ export const TaskRow: FunctionComponent<Props> = memo(
     );
 
     return (
-      <TaskRowContainer
+      <div
         // TODO needs some aria role
         ref={ref}
+        className={styles.taskRow}
         tabIndex={0}
         onFocus={handleFocus}
         onClick={handleClick}
@@ -164,8 +153,9 @@ export const TaskRow: FunctionComponent<Props> = memo(
         data-focused={isFocused}
         data-status={taskStatus(task)}
       >
-        <TaskRowHeader>
-          <TaskRowCheckbox
+        <div className={styles.header}>
+          <Checkbox
+            className={styles.checkbox}
             tabIndex={-1}
             checked={isCompleted}
             onCheckedChange={(checked) => onCompleted?.(task, Boolean(checked))}
@@ -177,8 +167,10 @@ export const TaskRow: FunctionComponent<Props> = memo(
             data-status={taskStatus(task)}
             value={title}
           />
-          {!isOpen && task.notes?.length ? <StyledNote size={16} /> : null}
-        </TaskRowHeader>
+          {!isOpen && task.notes?.length ? (
+            <Note size={16} className={styles.note} />
+          ) : null}
+        </div>
         {isOpen && (
           <TaskRowNotes
             ref={notesRef}
@@ -187,7 +179,7 @@ export const TaskRow: FunctionComponent<Props> = memo(
           />
         )}
         {isOpen && <TaskRowFooter task={task} />}
-      </TaskRowContainer>
+      </div>
     );
   },
 );

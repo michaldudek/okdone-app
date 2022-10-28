@@ -1,26 +1,17 @@
-import styled from '@emotion/styled';
 import { TimeRelative } from 'components/TimeRelative';
 import { FunctionComponent } from 'react';
 import { Task } from '../../types';
+import styles from './TaskRow.module.scss';
 
 type Props = {
   task: Task;
 };
 
-const Footer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: var(--24px);
-  color: var(--text-tertiary);
-  font-size: var(--12px);
-`;
-
 export const TaskRowFooter: FunctionComponent<Props> = ({ task }) => {
   const { completedAt, createdAt } = task;
 
   return (
-    <Footer>
+    <div className={styles.footer}>
       {completedAt && (
         <span>
           Completed <TimeRelative date={completedAt} />
@@ -31,6 +22,6 @@ export const TaskRowFooter: FunctionComponent<Props> = ({ task }) => {
           Created <TimeRelative date={createdAt} />
         </span>
       )}
-    </Footer>
+    </div>
   );
 };

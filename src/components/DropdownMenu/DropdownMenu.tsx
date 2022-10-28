@@ -1,21 +1,14 @@
-import styled from '@emotion/styled';
 import { Arrow, Content, Portal } from '@radix-ui/react-dropdown-menu';
+import clsx from 'clsx';
 import { ComponentProps, FunctionComponent } from 'react';
-import { contentStyle } from './styles';
+import styles from './DropdownMenu.module.scss';
 
 type Props = ComponentProps<typeof Content> & {
   showArrow?: boolean;
 };
 
-const StyledContent = styled(Content)`
-  ${contentStyle}
-`;
-
-const StyledArrow = styled(Arrow)`
-  fill: var(--background-active);
-`;
-
 export const DropdownMenu: FunctionComponent<Props> = ({
+  className,
   children,
   showArrow = false,
   collisionPadding = 16,
@@ -23,10 +16,14 @@ export const DropdownMenu: FunctionComponent<Props> = ({
 }) => {
   return (
     <Portal>
-      <StyledContent collisionPadding={collisionPadding} {...props}>
+      <Content
+        collisionPadding={collisionPadding}
+        className={clsx(styles.content, className)}
+        {...props}
+      >
         {children}
-        {showArrow && <StyledArrow />}
-      </StyledContent>
+        {showArrow && <Arrow className={styles.arrow} />}
+      </Content>
     </Portal>
   );
 };

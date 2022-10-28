@@ -1,0 +1,101 @@
+@use 'styles/media.scss';
+
+.content {
+  composes: slideIn from 'styles/animations.module.scss';
+  box-shadow: var(--shadow-elevated);
+  border-radius: var(--border-radius-regular);
+  background-color: var(--background-active);
+  padding: var(--5px);
+  width: 100vw;
+
+  @include media.tablet {
+    width: auto;
+    min-width: var(--220px);
+  }
+}
+
+.arrow {
+  fill: var(--background-active);
+}
+
+.item {
+  position: relative;
+  border-radius: var(--border-radius-small);
+  padding: 0 var(--5px);
+  min-height: var(--24px);
+  font-size: var(--14px);
+  line-height: 1;
+  user-select: none;
+
+  &,
+  & > a {
+    display: flex;
+    align-items: center;
+    outline: none;
+  }
+
+  & > a {
+    flex: 1;
+  }
+
+  &[data-disabled] {
+    pointer-events: none;
+    color: var(--text-disabled);
+  }
+
+  &[data-highlighted] {
+    background-color: var(--background-hover);
+  }
+}
+
+.itemWithIndicator {
+  composes: item;
+  padding-left: var(--20px);
+}
+
+.itemWithSubMenu {
+  composes: item;
+
+  &[data-state='open'] {
+    background-color: var(--background-active);
+  }
+}
+
+.indicator {
+  display: flex;
+  position: absolute;
+  left: 0;
+  justify-content: center;
+  align-items: center;
+}
+
+.itemMeta {
+  margin-left: auto;
+  padding-left: var(--20px);
+
+  &[data-highlighted] {
+    color: var(--text-inverse);
+  }
+
+  &[data-disabled] {
+    color: var(--text-disabled);
+  }
+}
+
+.itemKeyShortcut {
+  composes: itemMeta;
+  color: var(--text-tertiary);
+}
+
+.label {
+  padding-left: var(--20px);
+  color: var(--text-secondary);
+  font-size: var(--12px);
+  line-height: var(--24px);
+}
+
+.separator {
+  margin: var(--5px) 0;
+  background-color: var(--border-element);
+  height: 1px;
+}

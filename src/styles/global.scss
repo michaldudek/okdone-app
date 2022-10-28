@@ -1,0 +1,108 @@
+@use './media.scss';
+@use './utils.scss';
+
+@import './fonts.scss';
+
+/* handy pixels to rems */
+$pixels: 2, 3, 4, 5, 6, 8, 10, 12, 14, 16, 20, 24, 28, 30, 32, 36, 40, 44, 48,
+  50, 52, 56, 60, 64, 70, 80, 90, 100, 120, 220, 250, 300, 400, 500, 600, 700,
+  768, 800;
+:root {
+  @each $px in $pixels {
+    --#{$px}px: #{utils.pxToRem($px)};
+  }
+}
+
+/* color pallette */
+/* colors are taken from radix colors, slate scheme */
+/* color-scheme: light; */
+:root {
+  --color-brand: hsl(206, 100%, 50%);
+
+  --color-accent: var(--color-brand);
+  --color-success: hsl(81, 67%, 50%);
+  --color-warning: hsl(53, 92%, 50%);
+  --color-danger: hsl(10, 78%, 54%);
+  --color-active: #ffffff;
+
+  --accent-primary: var(--color-accent);
+  --accent-success: var(--color-success);
+  --accent-warning: var(--color-warning);
+  --accent-danger: var(--color-danger);
+
+  --background-accent: var(--accent-primary);
+  --background-app: hsl(206, 30%, 98.8%);
+  --background-subtle: hsl(210, 16.7%, 97.6%);
+  --background-element: hsl(209, 13.3%, 95.3%);
+  --background-hover: hsl(209, 12.2%, 93.2%);
+  --background-active: var(--color-active);
+  --background-solid: hsl(206, 6%, 56.1%);
+  --background-solid-hover: hsl(206, 5.8%, 52.3%);
+  --text-primary: hsl(206, 24%, 9%);
+  --text-secondary: hsl(206, 6%, 43.5%);
+  --text-tertiary: hsl(206, 5.8%, 52.3%);
+  --text-disabled: hsl(205, 10.7%, 78%);
+  --text-inverse: hsl(206, 30%, 98.8%);
+  --border-subtle: hsl(208, 11.3%, 88.9%);
+  --border-element: hsl(207, 11.1%, 85.9%);
+  --border-hover: hsl(205, 10.7%, 78%);
+  --divider: var(--border-subtle);
+  --fill-accent-primary: hsl(209, 100%, 96.5%);
+  --fill-accent-success: hsl(85, 76%, 92.3%);
+  --fill-accent-warning: hsl(55, 100%, 90.9%);
+  --fill-accent-danger: hsl(8, 100%, 96.6%);
+
+  --button-primary: var(--accent-primary);
+  --button-primary-label: var(--text-inverse);
+  --button-secondary: var(--background-element);
+  --button-secondary-label: var(--text-primary);
+
+  --highlight-background: var(--background-hover);
+  --highlight-shadow: 0 0 0 2px var(--border-subtle);
+
+  --border-radius-small: var(--4px);
+  --border-radius-regular: var(--8px);
+  --border-radius-large: var(--16px);
+  --border-radius-full: 100%;
+
+  --shadow-none: rgba(0, 0, 0, 0) 0 0 0;
+  --shadow-elevated: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+
+  --transition-regular: 150ms;
+  --transition-accent: 500ms;
+
+  --ease-regular: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html {
+  background-color: var(--background-app);
+  color: var(--text-primary);
+  font-weight: 300;
+  font-size: 16px;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+body {
+  font-size: var(--14px);
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+
+  @include media.tablet {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+// button {
+//   border: 0;
+//   padding: 0;
+// }
+
+// a {
+//   color: inherit;
+//   text-decoration: inherit;
+// }

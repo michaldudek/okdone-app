@@ -1,32 +1,22 @@
-import styled from '@emotion/styled';
 import { Button } from 'components/Button';
 import { Logo } from 'components/Logo';
 import { FunctionComponent } from 'react';
+import styles from './EmptyTasks.module.scss';
 
 type Props = {
   addTask: () => void;
 };
 
-const StyledContainer = styled.div`
-  margin: 15vh auto;
-  text-align: center;
-  color: var(--text-disabled);
-`;
-
-const StyledLogo = styled(Logo)`
-  margin: var(--32px) auto;
-`;
-
 export const EmptyTasks: FunctionComponent<Props> = ({ addTask }) => {
   return (
-    <StyledContainer>
+    <div className={styles.emptyTasks}>
       <p>What do you want to do?</p>
-      <StyledLogo color="var(--text-disabled)" size={80} />
+      <Logo color="var(--text-disabled)" size={80} className={styles.logo} />
       <p>
         <Button variant="accent" onClick={() => addTask()}>
           Add new task
         </Button>
       </p>
-    </StyledContainer>
+    </div>
   );
 };

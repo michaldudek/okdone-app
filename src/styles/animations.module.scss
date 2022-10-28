@@ -1,74 +1,72 @@
-import { css, keyframes } from '@emotion/react';
+@use './media.scss';
 
-export const MotionEnabled = `@media (prefers-reduced-motion: no-preference)`;
-
-export const slideUpAndFade = keyframes`
+@keyframes slideUpAndFade {
   0% {
-    opacity: 0;
     transform: translateY(var(--slide-length, 25%));
+    opacity: 0;
   }
 
   100% {
-    opacity: 1;
     transform: translateY(0);
+    opacity: 1;
   }
-`;
+}
 
-export const slideRightAndFade = keyframes`
+@keyframes slideRightAndFade {
   0% {
-    opacity: 0;
     transform: translateX(var(--slide-length, 25%));
+    opacity: 0;
   }
 
   100% {
-    opacity: 1;
     transform: translateX(0);
+    opacity: 1;
   }
-`;
+}
 
-export const slideDownAndFade = keyframes`
+@keyframes slideDownAndFade {
   0% {
-    opacity: 0;
     transform: translateY(var(--slide-length, 25%));
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-`;
-
-export const slideLeftAndFade = keyframes`
-  0% {
     opacity: 0;
-    transform: translateX(var(--slide-length, 25%));
   }
 
   100% {
+    transform: translateY(0);
     opacity: 1;
-    transform: translateX(0);
   }
-`;
+}
 
-export const slideInStyles = css`
-  ${MotionEnabled} {
-    will-change: transform, opacity;
+@keyframes slideLeftAndFade {
+  0% {
+    transform: translateX(var(--slide-length, 25%));
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slideIn {
+  @include media.motion {
     animation-duration: var(--transition-accent);
     animation-timing-function: var(--ease-regular);
+    will-change: transform, opacity;
 
     &[data-state='open'] {
       &[data-side='top'] {
-        animation-name: ${slideUpAndFade};
+        animation-name: slideUpAndFade;
       }
       &[data-side='right'] {
-        animation-name: ${slideLeftAndFade};
+        animation-name: slideLeftAndFade;
       }
       &[data-side='bottom'] {
-        animation-name: ${slideDownAndFade};
+        animation-name: slideDownAndFade;
       }
       &[data-side='left'] {
-        animation-name: ${slideRightAndFade};
+        animation-name: slideRightAndFade;
       }
     }
   }
-`;
+}

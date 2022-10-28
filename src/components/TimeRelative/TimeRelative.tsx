@@ -1,13 +1,17 @@
 import dayjs from 'dayjs';
-import { FunctionComponent } from 'react';
+import { ComponentProps, FunctionComponent } from 'react';
 
-type Props = {
+type Props = Omit<ComponentProps<'time'>, 'dateTime'> & {
   date: Date;
 };
 
-export const TimeRelative: FunctionComponent<Props> = ({ date }) => {
+export const TimeRelative: FunctionComponent<Props> = ({ date, ...props }) => {
   const now = new Date();
   const relative = date < now ? dayjs(date).fromNow() : dayjs(date).toNow();
 
-  return <time dateTime={date.toISOString()}>{relative}</time>;
+  return (
+    <time dateTime={date.toISOString()} {...props}>
+      {relative}
+    </time>
+  );
 };
