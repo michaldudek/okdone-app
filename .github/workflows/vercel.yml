@@ -1,0 +1,11 @@
+name: Vercel Prod Deploy Version
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl -X POST -d {} ${VERCEL_DEPLOY_HOOK}
