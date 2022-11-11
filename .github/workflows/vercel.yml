@@ -7,5 +7,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
     steps:
       - run: curl -X POST -d {} ${VERCEL_DEPLOY_HOOK}
