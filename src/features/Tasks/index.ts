@@ -12,6 +12,8 @@ registerRepository(
   TASK_RESOURCE_NAME,
   new TasksRepository(
     TASK_RESOURCE_NAME,
-    indexedDb.registerResource(TASK_RESOURCE_NAME, 7, {}, ['completedDate']),
+    indexedDb.registerResource(TASK_RESOURCE_NAME, 8, undefined, [
+      'completedDate',
+    ]),
   ),
 );
