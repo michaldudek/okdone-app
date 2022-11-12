@@ -2,12 +2,23 @@ name: Vercel Prod Deploy Version
 on:
   push:
     tags:
-      - '*'
+      - 'v[0-9]+.[0-9]+.[0-9]+' # only semver tags
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      VERCEL_DEPLOY_HOOK: ${{ secrets.VERCEL_DEPLOY_HOOK }}
     steps:
-      - run: curl -X POST -d {} ${VERCEL_DEPLOY_HOOK}
+      - uses: actions/checkout@v2
+      - name: Set Git config
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "Github Actions"
+      - name: Merge main to main-deploy
+        run: |
+          git fetch --unshallow
+          git checkout main
+          git pull
+          git checkout main-deploy
+          git pull
+          git rebase main
+          git push
