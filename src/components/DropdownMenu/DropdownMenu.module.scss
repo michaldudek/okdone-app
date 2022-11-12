@@ -36,6 +36,7 @@
 
   & > a {
     flex: 1;
+    color: var(--text-primary);
   }
 
   &[data-disabled] {

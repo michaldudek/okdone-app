@@ -203,12 +203,10 @@ export class IndexedDBStorage implements StorageInterface {
 
     if (isFindFilterOperator(value)) {
       switch (value.operator) {
+        case 'eq':
+          return this.filterEq(store, key, value.value);
         case 'in':
           return this.filterIn(store, key, value.value);
-        default:
-          throw new Error(
-            `FindFilterOperator "${value.operator}" is not implemented in IndexedDBStorage yet.`,
-          );
       }
     }
 
@@ -218,9 +216,9 @@ export class IndexedDBStorage implements StorageInterface {
   private async filterEq<T extends Resource>(
     store: IDBPObjectStore,
     key: string,
-    value: string | number,
+    value: string | number | null,
   ): Promise<T[]> {
-    const range = IDBKeyRange.only(value);
+    const range = IDBKeyRange.only(value ?? NULL_VALUE);
     const cursor = await store.index(key).openCursor(range);
     return !cursor ? [] : cursorToArray<T>(cursor);
   }
@@ -231,7 +229,7 @@ export class IndexedDBStorage implements StorageInterface {
     values: (string | number | null)[],
   ): Promise<T[]> {
     const resultSets = await Promise.all(
-      values.map((val) => this.filterEq<T>(store, key, val ?? NULL_VALUE)),
+      values.map((val) => this.filterEq<T>(store, key, val)),
     );
     return mergeResults(resultSets);
   }

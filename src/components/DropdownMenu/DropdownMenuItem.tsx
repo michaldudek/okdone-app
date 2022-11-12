@@ -18,7 +18,7 @@ import styles from './DropdownMenu.module.scss';
 
 const DropdownMenuItemCheck: FunctionComponent = () => (
   <ItemIndicator className={styles.indicator}>
-    <Check size={20} color="var(--text-primary)" />
+    <Check size={16} color="var(--text-primary)" />
   </ItemIndicator>
 );
 

@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { App } from 'features/App';
+import { AppearanceModeProvider } from 'features/Preferences';
 import { IconContext } from 'phosphor-react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
@@ -23,6 +24,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <QueryClientProvider client={reactQueryClient}>
+      <AppearanceModeProvider />
       <IconContext.Provider
         value={{ color: 'var(--text-tertiary)', weight: 'thin' }}
       >

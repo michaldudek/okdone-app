@@ -1,0 +1,145 @@
+/* radix colors palette */
+:root {
+  --colors-white: #ffffff;
+  --colors-black: #000000;
+  --colors-slate1: hsl(206 30% 98.8%);
+  --colors-slate2: hsl(210 16.7% 97.6%);
+  --colors-slate3: hsl(209 13.3% 95.3%);
+  --colors-slate4: hsl(209 12.2% 93.2%);
+  --colors-slate5: hsl(208 11.7% 91.1%);
+  --colors-slate6: hsl(208 11.3% 88.9%);
+  --colors-slate7: hsl(207 11.1% 85.9%);
+  --colors-slate8: hsl(205 10.7% 78%);
+  --colors-slate9: hsl(206 6% 56.1%);
+  --colors-slate10: hsl(206 5.8% 52.3%);
+  --colors-slate11: hsl(206 6% 43.5%);
+  --colors-slate12: hsl(206 24% 9%);
+  --colors-dark-slate1: hsl(200 7% 8.8%);
+  --colors-dark-slate2: hsl(195 7.1% 11%);
+  --colors-dark-slate3: hsl(197 6.8% 13.6%);
+  --colors-dark-slate4: hsl(198 6.6% 15.8%);
+  --colors-dark-slate5: hsl(199 6.4% 17.9%);
+  --colors-dark-slate6: hsl(201 6.2% 20.5%);
+  --colors-dark-slate7: hsl(203 6% 24.3%);
+  --colors-dark-slate8: hsl(207 5.6% 31.6%);
+  --colors-dark-slate9: hsl(206 6% 43.9%);
+  --colors-dark-slate10: hsl(206 5.2% 49.5%);
+  --colors-dark-slate11: hsl(206 6% 63%);
+  --colors-dark-slate12: hsl(210 6% 93%);
+
+  --color-brand: hsl(206, 100%, 50%);
+  --color-success: hsl(81 67% 50%);
+  --color-warning: hsl(53 92% 50%);
+  --color-danger: hsl(10 78% 54%);
+  color-scheme: light dark;
+}
+
+@mixin theme-light {
+  --color-accent: var(--color-brand);
+  --color-active: var(--colors-white);
+
+  --accent-primary: var(--color-accent);
+  --accent-success: var(--color-success);
+  --accent-warning: var(--color-warning);
+  --accent-danger: var(--color-danger);
+
+  --background-accent: var(--accent-primary);
+  --background-app: var(--colors-slate1);
+  --background-subtle: var(--colors-slate2);
+  --background-element: var(--colors-slate3);
+  --background-hover: var(--colors-slate4);
+  --background-active: var(--color-active);
+  --background-solid: var(--colors-slate9);
+  --background-solid-hover: var(--colors-slate9);
+  --text-primary: var(--colors-slate12);
+  --text-secondary: var(--colors-slate11);
+  --text-tertiary: var(--colors-slate10);
+  --text-disabled: var(--colors-slate8);
+  --text-inverse: var(--colors-slate1);
+  --border-subtle: var(--colors-slate6);
+  --border-element: var(--colors-slate7);
+  --border-hover: var(--colors-slate8);
+  --divider: var(--border-subtle);
+
+  --button-primary: var(--accent-primary);
+  --button-primary-label: var(--text-inverse);
+  --button-secondary: var(--background-element);
+  --button-secondary-label: var(--text-primary);
+
+  --highlight-background: var(--background-hover);
+  --highlight-shadow: 0 0 0 2px var(--border-subtle);
+
+  --shadow-none: rgba(0, 0, 0, 0) 0 0 0;
+  --shadow-elevated: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  --shadow-elevated-high: rgb(0 0 0 / 0%) 0px 0.783403px 0.783403px 0px,
+    rgb(0 0 0 / 1%) 0px 1.92107px 1.92107px 0px,
+    rgb(0 0 0 / 2%) 0px 3.63429px 3.63429px 0px,
+    rgb(0 0 0 / 4%) 0px 6.35486px 6.35486px 0px,
+    rgb(0 0 0 / 7%) 0px 11.0474px 11.0474px 0px,
+    rgb(0 0 0 / 13%) 0px 20.2497px 20.2497px 0px,
+    rgb(0 0 0 / 25%) 0px 40px 40px 0px;
+}
+
+@mixin theme-dark {
+  --color-accent: var(--color-brand);
+  --color-active: var(--colors-black);
+
+  --accent-primary: var(--color-accent);
+  --accent-success: var(--color-success);
+  --accent-warning: var(--color-warning);
+  --accent-danger: var(--color-danger);
+
+  --background-accent: var(--accent-primary);
+  --background-app: var(--colors-dark-slate1);
+  --background-subtle: var(--colors-dark-slate2);
+  --background-element: var(--colors-dark-slate3);
+  --background-hover: var(--colors-dark-slate4);
+  --background-active: var(--color-active);
+  --background-solid: var(--colors-dark-slate9);
+  --background-solid-hover: var(--colors-dark-slate9);
+  --text-primary: var(--colors-dark-slate12);
+  --text-secondary: var(--colors-dark-slate11);
+  --text-tertiary: var(--colors-dark-slate10);
+  --text-disabled: var(--colors-dark-slate8);
+  --text-inverse: var(--colors-dark-slate1);
+  --border-subtle: var(--colors-dark-slate6);
+  --border-element: var(--colors-dark-slate7);
+  --border-hover: var(--colors-dark-slate8);
+  --divider: var(--border-subtle);
+
+  --button-primary: var(--accent-primary);
+  --button-primary-label: var(--text-inverse);
+  --button-secondary: var(--background-element);
+  --button-secondary-label: var(--text-primary);
+
+  --highlight-background: var(--background-hover);
+  --highlight-shadow: 0 0 0 2px var(--border-subtle);
+
+  --shadow-none: rgba(0, 0, 0, 0) 0 0 0;
+  --shadow-elevated: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+  --shadow-elevated-high: rgb(0 0 0 / 0%) 0px 0.783403px 0.783403px 0px,
+    rgb(0 0 0 / 1%) 0px 1.92107px 1.92107px 0px,
+    rgb(0 0 0 / 2%) 0px 3.63429px 3.63429px 0px,
+    rgb(0 0 0 / 4%) 0px 6.35486px 6.35486px 0px,
+    rgb(0 0 0 / 7%) 0px 11.0474px 11.0474px 0px,
+    rgb(0 0 0 / 13%) 0px 20.2497px 20.2497px 0px,
+    rgb(0 0 0 / 25%) 0px 40px 40px 0px;
+}
+
+body,
+.theme-light {
+  @include theme-light;
+}
+
+.theme-dark {
+  @include theme-dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    @include theme-dark;
+    &.theme-light {
+      @include theme-light;
+    }
+  }
+}
