@@ -65,7 +65,7 @@ export const KeyboardShortcuts: FunctionComponent = () => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [isVisible, setVisible]);
 
   return (
     <div className={styles.wrap}>
