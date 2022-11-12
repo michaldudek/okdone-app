@@ -11,4 +11,5 @@ export type Preference<T = PreferenceValue> = Resource & {
 
 export enum Preferences {
   Appearance = 'appearance',
+  ShowKeyboardHelper = 'show_keyboard_helper',
 }

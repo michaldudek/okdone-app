@@ -1,5 +1,6 @@
+import { Preferences, usePreference } from 'features/Preferences';
 import { Keyboard } from 'phosphor-react';
-import { FunctionComponent, useEffect, useState } from 'react';
+import { FunctionComponent, useEffect } from 'react';
 import { platformKey, platformKeys, SpecialKey } from 'services/Platform';
 import { AppMenuButton } from '../../components/AppMenuButton';
 import styles from './KeyboardShortcuts.module.scss';
@@ -48,12 +49,15 @@ const shortcuts: { label: string; keys: (SpecialKey | string)[] }[] = [
 ];
 
 export const KeyboardShortcuts: FunctionComponent = () => {
-  const [isVisible, setVisible] = useState(true);
+  const [isVisible, setVisible] = usePreference<boolean>(
+    Preferences.ShowKeyboardHelper,
+    true,
+  );
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.shiftKey && event.ctrlKey && event.key.toLowerCase() === 'k') {
-        setVisible((prev) => !prev);
+        setVisible(!isVisible);
       }
     };
 
@@ -72,7 +76,7 @@ export const KeyboardShortcuts: FunctionComponent = () => {
           'shift',
           'k',
         ])})`}
-        onClick={() => setVisible((prev) => !prev)}
+        onClick={() => setVisible(!isVisible)}
       >
         <Keyboard
           size={28}
