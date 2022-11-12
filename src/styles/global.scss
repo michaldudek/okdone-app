@@ -53,3 +53,10 @@ body {
 a {
   color: inherit;
 }
+
+textarea,
+input {
+  &::placeholder {
+    color: var(--text-disabled);
+  }
+}
