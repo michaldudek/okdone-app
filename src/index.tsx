@@ -1,4 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Analytics } from '@vercel/analytics/react';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import { App } from 'features/App';
@@ -25,6 +26,7 @@ root.render(
   <React.StrictMode>
     <QueryClientProvider client={reactQueryClient}>
       <AppearanceModeProvider />
+      <Analytics />
       <IconContext.Provider
         value={{ color: 'var(--text-tertiary)', weight: 'thin' }}
       >
